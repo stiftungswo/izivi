@@ -29,6 +29,7 @@ const authorizedOnly = ({ router }) => {
     	router.push('/login');
 	} else {
 		// verify token is valid and has not expired yet and set props isLoggedIn and maybe also isAdmin and Role
+		
 	}
 }
 
