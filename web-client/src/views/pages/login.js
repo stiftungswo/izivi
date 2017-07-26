@@ -34,13 +34,12 @@ export default class Login extends Component {
 			self.context.router.push('/')
         }).catch(error => {
 			let errorMsg = ''
-			errorMsg += 'Login failed!\nPlease check the following field(s):\n\n'
+			errorMsg += 'Request failed!\nPlease check the following field(s):\n\n'
 			for (let item in error.response.data) {
 				errorMsg += item + ': ' + error.response.data[item] + '\n'
 			}
 			alert(errorMsg)
 		});
-
 	}
 
 	handleChange(e) {
