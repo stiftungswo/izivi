@@ -31,7 +31,7 @@ class ZiviReportSheetPDF extends PDF
     private $user;
     private $spesen;
 
-    public function __construct($spesenId, $from, $to)
+    public function __construct($spesenId)
     {
         parent::__construct();
 
