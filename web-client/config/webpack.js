@@ -29,7 +29,11 @@ module.exports = env => {
 					fallback: 'style-loader',
 					use: 'css-loader!postcss-loader!sass-loader'
 				}) : 'style-loader!css-loader!postcss-loader!sass-loader'
-			}]
+			},
+				{ test: /\.css$/,
+					loader: 'style-loader!css-loader' },
+				{test   : /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
+                    loader : 'file-loader'}]
 		},
 		plugins: setup(isProd),
 		devtool: !isProd && 'eval',
@@ -39,7 +43,9 @@ module.exports = env => {
 			historyApiFallback: true,
 			compress: isProd,
 			inline: !isProd,
-			hot: !isProd
+			hot: !isProd,
+			host: '0.0.0.0',
+            disableHostCheck:true
 		}
 	};
 };
