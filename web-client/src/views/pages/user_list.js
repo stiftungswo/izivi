@@ -31,7 +31,7 @@ export default class UserList extends Component {
             { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
         ).then((response) => {
             this.setState({
-                users: response.data.data.original
+                users: response.data
             });
         }).catch((error) => {
             console.log(error);

@@ -32,7 +32,6 @@ export default class Login extends Component {
 			this.props.accountStore.isAdmin = true
 			localStorage.setItem('jwtToken', response.data.data.token)
 			this.context.router.push('/')
-            console.log(this.state.email+' '+this.state.password)
         }).catch(error => {
             var errorBox = []
             errorBox.push(<div class="alert alert-danger">
