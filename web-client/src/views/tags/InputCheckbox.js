@@ -11,8 +11,10 @@ export default class InputCheckbox extends InputField {
             <input
                 type="checkbox"
                 id={ this.props.id }
+                name={ this.props.id }
                 value={ this.props.value }
                 className="form-control"
+                onChange={(e)=>this.props.self.handleChange(e)}
                 disabled={this.props.disabled} />
         , null, 1)
     }
