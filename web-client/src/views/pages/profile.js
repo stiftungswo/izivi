@@ -7,6 +7,8 @@ import InputCheckbox from '../tags/InputCheckbox';
 import axios from 'axios';
 import Component from 'inferno-component';
 import ApiService from "../../utils/api";
+import LoadingView from "../tags/loading-view";
+import Header from "../tags/header";
 
 export default class User extends Component {
     constructor(props) {
@@ -23,6 +25,8 @@ export default class User extends Component {
     }
 
     getUser() {
+        this.setState({loading: true, error: null});
+
         let temp = []
         let self = this;
         let howerText_BankName = "Name, Postleitzahl und Ort deiner Bank. Während der Eingabe werden dir Banken mit den entsprechenden Namen und aus den entsprechenden Ortschaften vorgeschlagen welche du auswählen kannst um automatisch die Clearing-Nr. und Postkonto-Nr. abfüllen zu lassen. Beispiel: Meine Bank, 8000 Zürich";
@@ -30,7 +34,7 @@ export default class User extends Component {
         axios.get(
             ApiService.BASE_URL+'user'+(this.props.params.userid ? '/'+this.props.params.userid : ''),
             { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
-        ).then(function (response) {
+        ).then((response) => {
             console.log('response ' + response.data)
             temp.push(
 
@@ -384,38 +388,40 @@ export default class User extends Component {
                     </tr>
                 </tbody>
             );*/
-        }).then(function (response) {
-            self.setState({
-                result: temp
+        }).then((response) => {
+            this.setState({
+                result: temp,
+                loading: false
             });
-        }).catch(function (error) {
-            console.log(error);
+        }).catch((error) => {
+            this.setState({error: error});
         });
     }
 
     render() {
         return (
+			<Header>
+                <div className="page page__user_list">
+                    <Card>
+                        <h1>Profil</h1>
+                        <div class="container">
 
-			<div className="page page__user_list">
-				<Card>
-					<h1>Profil</h1>
-                    <div class="container">
+                        <form class="form-horizontal">
+                            <hr />
+                                <button name="resetPassword" type="submit" class="btn btn-primary">Passwort zurücksetzen</button>
+                                <input name="id" value="00000" type="hidden"/>
+                                <input name="action" value="saveEmployee" type="hidden"/>
+                            <hr />
 
-                    <form class="form-horizontal">
-                        <hr />
-                            <button name="resetPassword" type="submit" class="btn btn-primary">Passwort zurücksetzen</button>
-                            <input name="id" value="00000" type="hidden"/>
-                            <input name="action" value="saveEmployee" type="hidden"/>
-                        <hr />
+                            {this.state.result}
 
-                        {this.state.result}
-
-                        <button type="submit" class="btn btn-primary">Absenden</button>
-                    </form>
-                    </div>
-                </Card>
-			</div>
-
+                            <button type="submit" class="btn btn-primary">Absenden</button>
+                        </form>
+                        </div>
+                    </Card>
+                    <LoadingView loading={this.state.loading} error={this.state.error}/>
+                </div>
+			</Header>
         );
     }
 }
