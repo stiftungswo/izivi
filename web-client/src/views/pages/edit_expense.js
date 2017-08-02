@@ -72,6 +72,10 @@ export default class EditExpense extends Component {
         });
 	}
 
+	formatRappen(amount){
+    	return parseFloat(Math.round(amount * 100) / 100).toFixed(2);
+	}
+
     render(){
     	var content = [];
         var sheet = this.state.report_sheet;
@@ -206,8 +210,8 @@ export default class EditExpense extends Component {
 					<tr>
 						<td class="teven">Kleiderspesen</td>
 						<td class="teven">&nbsp;</td>
-						<td class="teven">{sheet.meldeblaetter_kleider_proposal} Fr.</td>
-						<td class="teven" align="right"><input type="text" name="meldeblaetter_kleider" value={sheet.meldeblaetter_kleider} size="5" onchange={(e)=>(this.handleChange(e))}/> Fr.</td>
+						<td class="teven">{this.formatRappen(sheet.meldeblaetter_kleider_proposal)} Fr.</td>
+						<td class="teven" align="right"><input type="text" name="meldeblaetter_kleider" value={this.formatRappen(sheet.meldeblaetter_kleider)} size="5" onchange={(e)=>(this.handleChange(e))}/> Fr.</td>
 						<td class="teven">&nbsp;</td>
 						<td class="teven">Bemerkungen: <input type="text" name="meldeblaetter_kleider_comment" value={sheet.meldeblaetter_kleider_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
 					</tr>
@@ -215,7 +219,7 @@ export default class EditExpense extends Component {
 						<td class="todd">Fahrspesen</td>
 						<td class="todd">&nbsp;</td>
 						<td class="todd">&nbsp;</td>
-						<td class="todd" align="right"><input type="text" name="meldeblaetter_fahrspesen" value={sheet.meldeblaetter_fahrspesen} size="5" onchange={(e)=>(this.handleChange(e))}/> Fr.</td>
+						<td class="todd" align="right"><input type="text" name="meldeblaetter_fahrspesen" value={this.formatRappen(sheet.meldeblaetter_fahrspesen)} size="5" onchange={(e)=>(this.handleChange(e))}/> Fr.</td>
 						<td class="todd">&nbsp;</td>
 						<td class="todd">Bemerkungen: <input type="text" name="meldeblaetter_fahrspesen_comment" value={sheet.meldeblaetter_fahrspesen_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
 					</tr>
@@ -223,7 +227,7 @@ export default class EditExpense extends Component {
 						<td class="teven">Ausserordentliche Spesen</td>
 						<td class="teven">&nbsp;</td>
 						<td class="teven">&nbsp;</td>
-						<td class="teven" align="right"><input type="text" name="meldeblaetter_ausserordentlich" value={sheet.meldeblaetter_ausserordentlich} size="5" onchange={(e)=>(this.handleChange(e))}/> Fr.</td>
+						<td class="teven" align="right"><input type="text" name="meldeblaetter_ausserordentlich" value={this.formatRappen(sheet.meldeblaetter_ausserordentlich)} size="5" onchange={(e)=>(this.handleChange(e))}/> Fr.</td>
 						<td class="teven">&nbsp;</td>
 						<td class="teven">Bemerkungen: <input type="text" name="meldeblaetter_ausserordentlich_comment" value={sheet.meldeblaetter_ausserordentlich_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
 					</tr>
@@ -231,7 +235,7 @@ export default class EditExpense extends Component {
 						<td class="todd"><b>Total</b></td>
 						<td class="todd">&nbsp;</td>
 						<td class="todd">&nbsp;</td>
-						<td class="todd" align="right"><b>{sheet.total} Fr.</b></td>
+						<td class="todd" align="right"><b>{this.formatRappen(sheet.total)} Fr.</b></td>
 						<td class="todd">&nbsp;</td>
 						<td class="todd">&nbsp;</td>
 					</tr>
