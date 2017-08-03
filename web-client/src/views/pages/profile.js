@@ -78,12 +78,15 @@ export default class User extends Component {
         let value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
         this.state['result'][e.target.name] = value;
         this.setState(this.state);
+
+        console.log(value);
     }
 
-    handleDateChange(e) {
-        let value = DatePicker.dateFormat_CH2EN(e.target.value);
-        this.state['result'][e.target.name] = value;
-        this.setState(this.state);
+    handleDateChange(e, origin) {
+        let value = DatePicker.dateFormat_CH2EN(e.target.value)
+
+        origin.state['result'][e.target.name] = value;
+        origin.setState(this.state);
     }
 
     handleSelectChange(e) {
@@ -139,7 +142,7 @@ export default class User extends Component {
                             <InputField id="address" label="Strasse" value={result.address} self={this} />
                             <InputField id="city" label="Ort" value={result.city} self={this} />
 
-                            <DatePicker id="birthday" label="Geburtstag" value={result.birthday} self={this} />
+                            <DatePicker id="birthday" label="Geburtstag" value={result.birthday} callback={this.handleDateChange} callbackOrigin={this} />
 
                             <InputField id="hometown" label="Heimatort" value={result.hometown} self={this} />
 

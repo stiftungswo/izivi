@@ -56,6 +56,7 @@ $(document).ready(function(){
 
     $('.datePicker')
         .datepicker({
+            //format: 'yyyy-mm-dd',
             format: 'dd.mm.yyyy',
             autoclose: true,
             startView: 'decade',
