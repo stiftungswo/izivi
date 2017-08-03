@@ -43,19 +43,16 @@ export default class User extends Component {
         var options = [];
         options.push(<option value=""></option>);
 
-        let isSelected = null;
 
         for(let i = 0; i < this.state.cantons.length; i++) {
 
+            let isSelected = null;
             if(parseInt(this.state.result['canton']) == i) {
-                isSelected = (isSelected);
+                isSelected.push(selected);
                 console.log("isSelected does not work yet"); //TODO
             }
-            else {
-                isSelected = null;
-            }
 
-            options.push(<option value={this.state.cantons[i].id}  isSelected>{this.state.cantons[i].short_name}</option>)
+            options.push(<option value={this.state.cantons[i].id}  {isSelected}>{this.state.cantons[i].short_name}</option>)
         }
 
         return options;
