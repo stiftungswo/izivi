@@ -6,6 +6,7 @@ import InputFieldWithHelpText from '../tags/InputFieldWithHelpText';
 import InputCheckbox from '../tags/InputCheckbox';
 import DatePicker from '../tags/DatePicker';
 import Cantons from '../tags/Cantons';
+import RegionalCenters from '../tags/RegionalCenters';
 import axios from 'axios';
 import Component from 'inferno-component';
 import ApiService from "../../utils/api";
@@ -19,19 +20,18 @@ export default class User extends Component {
         this.state = {
             result: [],
             cantons: [],
+            regianlCenters: [],
         };
 
         this.cantonTag = new Cantons();
+        this.regionalCenterTag = new RegionalCenters();
     }
 
     componentDidMount()
     {
         this.getUser();
         this.cantonTag.getCantons(this);
-    }
-
-    renderCantons() {
-        return this.cantonTag.renderCantons(this.state);
+        this.regionalCenterTag.getRegionalCenters(this);
     }
 
     getUser() {
@@ -132,7 +132,7 @@ export default class User extends Component {
                                 <label class="control-label col-sm-3" for="canton">Kanton</label>
                                 <div class="col-sm-9">
                                     <select id="canton" name="canton" class="form-control" onChange={(e)=>this.handleSelectChange(e)}>
-                                        { this.renderCantons() }
+                                        { this.cantonTag.renderCantons(this.state) }
                                     </select>
                                 </div>
                             </div>
@@ -159,14 +159,8 @@ export default class User extends Component {
                              <div class="form-group">
                                  <label class="control-label col-sm-3" for="hometown">Regionalzentrum</label>
                                  <div class="col-sm-9">
-                                     <select id="regional_center" name="regional_center" class="form-control" onChange={(e)=>this.handleChange(e)}> // regional_center
-                                         <option value="-1"></option>
-                                         <option value="1">Regionalzentrum Thun</option>
-                                         <option value="3">Regionalzentrum Rueti/ZH</option>
-                                         <option value="4">Regionalzentrum Luzern</option>
-                                         <option value="6">Centre regional Lausanne</option>
-                                         <option value="7">Regionalzentrum Rivera</option>
-                                         <option value="8">Regionalzentrum Aarau</option>
+                                     <select id="regional_center" name="regional_center" class="form-control" onChange={(e)=>this.handleSelectChange(e)}> // regional_center
+                                         { this.regionalCenterTag.renderRegionalCenters(this.state) }
                                      </select>
                                  </div>
                              </div>
