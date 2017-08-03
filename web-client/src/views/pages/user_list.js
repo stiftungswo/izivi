@@ -18,6 +18,7 @@ export default class UserList extends Component {
             name:'',
             start:'',
             end:'',
+            active:'',
             group:0
         };
     }
@@ -43,25 +44,9 @@ export default class UserList extends Component {
     }
 
     handleChange(e) {
-        switch(e.target.name) {
-            case 'zdp':
-                this.setState({zdp: e.target.value})
-                break;
-            case 'name':
-                this.setState({name: e.target.value})
-                break;
-            case 'start':
-                this.setState({start: e.target.value})
-                break;
-            case 'end':
-                this.setState({end: e.target.value})
-                break;
-            case 'group':
-                this.setState({group: e.target.value})
-                break;
-            default:
-                console.log('Element not found for setting.')
-        }
+        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+        this.state[e.target.name] = value;
+        this.setState(this.state);
     }
 
     deleteUser(user){
@@ -89,10 +74,13 @@ export default class UserList extends Component {
             if(this.state.start!='' && users[i].end < this.state.start){
                 continue;
             }
-            if(this.state.end!='' && users[i].start>this.state.end){
+            if(this.state.end!='' && users[i].start > this.state.end){
                 continue;
             }
-            if(this.state.group!=0 && users[i].role_id!=this.state.group){
+            if(this.state.active && (users[i].start==null || users[i].end < new Date().toISOString().slice(0, 10) || users[i].start > new Date().toISOString().slice(0, 10))){
+                continue;
+            }
+            if(this.state.group!=0 && users[i].role_id != this.state.group){
                 continue;
             }
 
@@ -101,8 +89,9 @@ export default class UserList extends Component {
                 <td><a href={'/profile/'+users[i].id}>{users[i].first_name} {users[i].last_name}</a></td>
                 <td>{users[i].start}</td>
                 <td>{users[i].end}</td>
+                <td>{users[i].active}</td>
                 <td>{users[i].role}</td>
-                <td><a href={()=>{if(confirm('Möchten Sie '+users[i].first_name+' '+users[i].last_name+' wirklich löschen?')){ this.deleteUser(users[i]) }}}>Löschen</a></td>
+                <td><a onclick={()=>{if(confirm('Möchten Sie '+users[i].first_name+' '+users[i].last_name+' wirklich löschen?')){ this.deleteUser(users[i]) }}}>Löschen</a></td>
             </tr>);
         }
 
@@ -118,6 +107,7 @@ export default class UserList extends Component {
                                     <th>Vorname Name</th>
                                     <th>Start</th>
                                     <th>Ende</th>
+                                    <th>Aktiv?</th>
                                     <th>Gruppe</th>
                                     <th></th>
                                 </tr>
@@ -133,6 +123,9 @@ export default class UserList extends Component {
                                     </td>
                                     <td>
                                         <input class="SWOInput" name="end" size="10" type="date" value={ this.state.end } oninput={ this.handleChange.bind(this) }/>
+                                    </td>
+                                    <td>
+                                        <input class="SWOInput" name="active" type="checkbox" value={ this.state.active } onchange={ this.handleChange.bind(this) }/>
                                     </td>
                                     <td>
                                         <select name="group" value={ this.state.group } oninput={ this.handleChange.bind(this) }>
