@@ -9,7 +9,6 @@ import LoadingView from "../tags/loading-view";
 import Header from "../tags/header";
 
 
-@connect(['accountStore'])
 export default class Register extends Component {
 
     constructor(props) {
