@@ -6,6 +6,7 @@ import Component from 'inferno-component';
 import ApiService from "../../utils/api";
 import LoadingView from "../tags/loading-view";
 import Header from "../tags/header";
+import DatePicker from '../tags/DatePicker';
 
 export default class MissionOverview extends Component {
     constructor(props) {
@@ -144,16 +145,19 @@ export default class MissionOverview extends Component {
                                         <label><input type="radio" name="time_type" value="0" defaultChecked="true" onchange={(e)=>{this.handleChange(e)}}/> Jahr:&nbsp;</label>
                                         <select name="time_year" defaultValue={curMonthDate.getFullYear()} onchange={(e)=>{this.handleChange(e)}}>
                                             {yearoptions}
-                                        </select><br/>
+                                        </select>
+                                        <br/>
 
                                         <label><input type="radio" name="time_type" value="1" onchange={(e)=>{this.handleChange(e)}}/> Periode:&nbsp;</label>
-                                        <input type="date" name="time_from" onchange={(e)=>{this.handleChange(e)}}/> - <input type="date" name="time_to" onchange={(e)=>{this.handleChange(e)}}/>
+                                        <DatePicker id="time_from" label="Datum von" value={new Date()} callback={(e)=>{this.handleChange(e)}} callbackOrigin={this} />
+                                        <DatePicker id="time_to" label="Datum zu" value={new Date()} callback={(e)=>{this.handleChange(e)}} callbackOrigin={this} />
+                                        <div id="picker-container"></div>
                                         <br/>
 
                                         <label><input type="radio" name="time_type" value="2" onchange={(e)=>{this.handleChange(e)}}/> {this.monthNames[curMonthDate.getMonth()]} {curMonthDate.getFullYear()}</label><br/>
                                         <label><input type="radio" name="time_type" value="3" onchange={(e)=>{this.handleChange(e)}}/> {this.monthNames[prevMonthDate.getMonth()]} {prevMonthDate.getFullYear()}</label><br/>
-
                                         <br/>
+
                                         <label><input type="radio" name="showOnlyDoneSheets" value="1" defaultChecked="true" onchange={(e)=>{this.handleChange(e)}}/> Erledigte Meldeblätter</label><br/>
                                         <label><input type="radio" name="showOnlyDoneSheets" value="0" onchange={(e)=>{this.handleChange(e)}}/> Alle Meldeblätter</label>
                                         <br/><br/>
@@ -162,7 +166,6 @@ export default class MissionOverview extends Component {
                                         <button data-dismiss="modal" onClick={() => {this.showStatsExtended(1)}} class="btn btn-primary">Detailübersicht</button>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
 
