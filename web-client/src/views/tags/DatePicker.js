@@ -24,6 +24,7 @@ export default class DatePicker extends InputField {
     }
 
     render() {
+
         let dateValue = this.props.value;
         if(dateValue === undefined || parseInt(dateValue) == 0) {
             dateValue = null;
