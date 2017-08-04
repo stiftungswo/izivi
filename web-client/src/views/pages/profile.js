@@ -14,17 +14,19 @@ import LoadingView from "../tags/loading-view";
 import Header from "../tags/header";
 
 export default class User extends Component {
-    constructor(props) {
+    constructor(props, {router}) {
         super(props);
 
         this.state = {
             result: [],
             cantons: [],
             regianlCenters: [],
+            lastDateValue : null,
         };
 
         this.cantonTag = new Cantons();
         this.regionalCenterTag = new RegionalCenters();
+        this.router = router;
     }
 
     componentDidMount()
@@ -34,18 +36,25 @@ export default class User extends Component {
         this.regionalCenterTag.getRegionalCenters(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.props = nextProps;
+        this.componentDidMount();
+    }
+
     getUser() {
         this.setState({loading: true, error: null});
 
         axios.get(
-            ApiService.BASE_URL+'user'+(this.props.params.userid ? '/'+this.props.params.userid : ''),
+            ApiService.BASE_URL+'user'+(this.props.params.userid ? '/'+ this.props.params.userid : ''),
             { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
         ).then((response) => {
             this.setState({
                 result: response.data,
-                loading: false
+                loading: false,
+                lastDateValue : response.data['birthday'],
             });
 
+            console.log("response: " + response.data['birthday']);
         }).catch((error) => {
             this.setState({error: error});
         });
@@ -58,7 +67,14 @@ export default class User extends Component {
     }
 
     handleDateChange(e, origin) {
-        let value = DatePicker.dateFormat_CH2EN(e.target.value)
+        let value = e.target.value;
+
+        if(value === undefined || value == null || value == "") {
+            value = origin.state.lastDateValue;
+        }
+        else {
+            value = DatePicker.dateFormat_CH2EN(value);
+        }
 
         origin.state['result'][e.target.name] = value;
         origin.setState(this.state);
@@ -90,10 +106,16 @@ export default class User extends Component {
         });
     }
 
+    redirectToChangePassword(e) {
+        this.router.push('/changePassword');
+    }
+
     render() {
 
         let result = this.state.result;
-        let howerText_BankName = "Name, Postleitzahl und Ort deiner Bank. Während der Eingabe werden dir Banken mit den entsprechenden Namen und aus den entsprechenden Ortschaften vorgeschlagen welche du auswählen kannst um automatisch die Clearing-Nr. und Postkonto-Nr. abfüllen zu lassen. Beispiel: Meine Bank, 8000 Zürich";
+        let howerText_IBAN = "IBAN nummer";
+        let howerText_Post = "Postkonto Nummer";
+        let howerText_Berufserfahrung = "Wir profitieren gerne von deiner Erfahrung. Wenn wir genau wissen, wann wer mit welchen Erfahrungen einen Einsatz tätigt, können wir z.T. Projekte speziell planen.";
 
         return (
 			<Header>
@@ -104,10 +126,9 @@ export default class User extends Component {
 
                         <form class="form-horizontal">
                             <hr />
-                                <button name="resetPassword" type="submit" class="btn btn-primary">Passwort zurücksetzen</button>
-                                <input name="id" value="00000" type="hidden"/>
-                                <input name="action" value="saveEmployee" type="hidden"/>
-                            <hr />
+                            { this.passwordChangeButton() }
+                            <input name="id" value="00000" type="hidden"/>
+                            <input name="action" value="saveEmployee" type="hidden"/>
 
                             <h3>Persönliche Informationen</h3>
                             <InputField id="zdp" label="ZDP" value={result.zdp} disabled="true"/>
@@ -137,19 +158,19 @@ export default class User extends Component {
                             </div>
 
                             <hr />
-                            <h3>Bank-/Postverbindung</h3>,
-                            <InputFieldWithHelpText id="bank_iban" label="IBAN-Nr." value={result.bank_iban} popoverText={howerText_BankName} self={this} />
-                            <InputFieldWithHelpText id="post_account" label="Postkonto-Nr." value={result.post_account} popoverText={howerText_BankName} self={this} />
+                            <h3>Bank-/Postverbindung</h3>
+                            <InputFieldWithHelpText id="bank_iban" label="IBAN-Nr." value={result.bank_iban} popoverText={howerText_IBAN} self={this} />
+                            <InputFieldWithHelpText id="post_account" label="Postkonto-Nr." value={result.post_account} popoverText={howerText_Post} self={this} />
 
                             <hr />
-                             <h3>Diverse Informationen</h3>,
+                             <h3>Diverse Informationen</h3>
                              <div class="form-group">
                                  <label class="control-label col-sm-3" for="berufserfahrung">Berufserfahrung</label>
                                  <div class="col-sm-8">
                                      <textarea rows="4" id="work_experience" name="work_experience" class="form-control" onChange={(e)=>this.handleTextareaChange(e)}>{result.work_experience}</textarea>
                                  </div>
                                  <div id="_helpberufserfahrung" className="col-sm-1">
-                                     <a href="#" data-toggle="popover" title="Berufserfahrung" data-content="Text TODO">
+                                     <a href="#" data-toggle="popover" title="Berufserfahrung" data-content={howerText_Berufserfahrung}>
                                          <span style="font-size:2em;" className="glyphicon glyphicon-question-sign" aria-hidden="true"/>
                                      </a>
                                  </div>
@@ -158,7 +179,7 @@ export default class User extends Component {
                              <div class="form-group">
                                  <label class="control-label col-sm-3" for="hometown">Regionalzentrum</label>
                                  <div class="col-sm-9">
-                                     <select id="regional_center" name="regional_center" class="form-control" onChange={(e)=>this.handleSelectChange(e)}> // regional_center
+                                     <select id="regional_center" name="regional_center" class="form-control" onChange={(e)=>this.handleSelectChange(e)}>
                                          { this.regionalCenterTag.renderRegionalCenters(this.state) }
                                      </select>
                                  </div>
@@ -182,5 +203,21 @@ export default class User extends Component {
             </div>
         </Header>
         );
+    }
+
+    componentDidUpdate() {
+        DatePicker.initializeDatePicker();
+    }
+
+    passwordChangeButton() {
+        if(!this.props.params.userid) {
+            return (
+                <div>
+                    <button name="resetPassword" class="btn btn-primary" onClick={(e)=>this.redirectToChangePassword(e)}>Passwort ändern</button>
+                    <hr />
+                </div>
+            )
+        }
+        return;
     }
 }
