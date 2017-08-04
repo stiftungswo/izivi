@@ -52,7 +52,7 @@ export default class Header extends Component {
 
 		return (
 			<div>
-				<header className="header">
+				<header className="header no-print">
 					<Link to="/"><h1>iZivi</h1></Link>
 					<nav>
 						{isAdmin ? this.adminMenu() : null}
