@@ -105,7 +105,6 @@ class ReportSheet extends Model
                 'users.last_name AS last_name')
             ->first();
 
-
         $reportSheet['meldeblaetter_tage'] = ReportSheet::countDaysBetween(strtotime($reportSheet['meldeblaetter_start']), strtotime($reportSheet['meldeblaetter_end']));
         $reportSheet['einsaetze_tage'] = ReportSheet::countDaysBetween(strtotime($reportSheet['einsaetze_start']), strtotime($reportSheet['einsaetze_end']));
 

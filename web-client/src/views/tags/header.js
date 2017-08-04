@@ -4,7 +4,6 @@ import Component from 'inferno-component';
 
 import { connect } from 'inferno-mobx'
 
-@connect(['accountStore'])
 export default class Header extends Component {
 
 	guestMenu() {
