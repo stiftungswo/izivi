@@ -169,7 +169,7 @@ export default class User extends Component {
                                  <div class="col-sm-8">
                                      <textarea rows="4" id="work_experience" name="work_experience" class="form-control" onChange={(e)=>this.handleTextareaChange(e)}>{result.work_experience}</textarea>
                                  </div>
-                                 <div id="_helpberufserfahrung" className="col-sm-1">
+                                 <div id="_helpberufserfahrung" className="col-sm-1 hidden-xs">
                                      <a href="#" data-toggle="popover" title="Berufserfahrung" data-content={howerText_Berufserfahrung}>
                                          <span style="font-size:2em;" className="glyphicon glyphicon-question-sign" aria-hidden="true"/>
                                      </a>
