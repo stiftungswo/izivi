@@ -12,6 +12,8 @@ import Component from 'inferno-component';
 import ApiService from "../../utils/api";
 import LoadingView from "../tags/loading-view";
 import Header from "../tags/header";
+import moment from 'moment';
+
 
 export default class User extends Component {
     constructor(props, {router}) {
@@ -23,6 +25,8 @@ export default class User extends Component {
             regianlCenters: [],
             specifications: [],
             lastDateValue : null,
+            specifications: [],
+            reportSheets: []
         };
 
         this.cantonTag = new Cantons();
@@ -36,6 +40,7 @@ export default class User extends Component {
         this.cantonTag.getCantons(this);
         this.regionalCenterTag.getRegionalCenters(this);
         this.getSpecifications();
+        this.getReportSheets();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -55,20 +60,37 @@ export default class User extends Component {
                 loading: false,
                 lastDateValue : response.data['birthday'],
             });
-
-            console.log("response: " + response.data['birthday']);
         }).catch((error) => {
             this.setState({error: error});
         });
     }
 
     getSpecifications() {
+        this.setState({loading: true, error: null});
+
         axios.get(
             ApiService.BASE_URL+'specification',
             { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
         ).then((response) => {
             this.setState({
+                loading: false,
                 specifications: response.data
+            });
+        }).catch((error) => {
+            this.setState({error: error});
+        });
+    }
+
+    getReportSheets() {
+        this.setState({loading: true, error: null});
+
+        axios.get(
+            ApiService.BASE_URL+'reportsheet/me',
+            { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
+        ).then((response) => {
+            this.setState({
+                loading: false,
+                reportSheets: response.data
             });
         }).catch((error) => {
             this.setState({error: error});
@@ -363,6 +385,29 @@ export default class User extends Component {
                                 </div>
                             </div>
                         </div>
+
+                        <hr />
+                        <h3>Meldeblätter</h3>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Von</th>
+                                    <th>Bis</th>
+                                    <th>Tage</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                { this.state.reportSheets.map(obj =>
+                                            <tr>
+                                                <td>{ obj.start }</td>
+                                                <td>{ obj.end }</td>
+                                                <td>{ moment(obj.end,'YYYY-MM-DD').diff(moment(obj.start,'YYYY-MM-DD'), 'days') }</td>
+                                                <td><button name="reportSheet" class="btn btn-primary" onClick="">Spesenrapport</button></td>
+                                            </tr>
+                                ) }     
+                            </tbody>
+                        </table>
 
                         </div>
                     </Card>
