@@ -21,25 +21,25 @@ export default class Register extends Component {
 
 	register() {
     	this.setState({loading:true, error:null});
-		axios.post(
+        axios.post(
             ApiService.BASE_URL+'auth/register',
-			this.state.formData
-		).then(response => {
-			localStorage.setItem('jwtToken', response.data.data.token)
-			this.context.router.push('/')
+            this.state.formData
+        ).then(response => {
+            localStorage.setItem('jwtToken', response.data.data.token)
+            this.context.router.push('/')
         }).catch(error => {
-			var errorMsg = []
-			if(error.response!=null && error.response.data!=null){
-				for (let item in error.response.data) {
-					errorMsg.push(<p>{item}: {error.response.data[item]}</p>);
-				}
+            var errorMsg = []
+            if(error.response!=null && error.response.data!=null){
+                for (let item in error.response.data) {
+                    errorMsg.push(<p>{item}: {error.response.data[item]}</p>);
+                }
             }
             var errorBox = []
             errorBox.push(<div class="alert alert-danger">
 				<strong>Registration fehlgeschlagen</strong><br/>{errorMsg}
 			</div>);
             this.setState({errorBox:errorBox, loading:false})
-		});
+        });
 	}
 
     handleChange(e) {
@@ -118,6 +118,22 @@ export default class Register extends Component {
 											data-match-error="Die beiden Eingaben stimmen nicht überein"
 											placeholder=""
 											required
+										/>
+									</div>
+									<div class="col-sm-3"></div>
+									<div class="help-block with-errors col-sm-9" />
+								</div>
+
+								<div class="form-group has-feedback">
+									<label class="control-label col-sm-3" for="community_pw">Community Passwort:</label>
+									<div class="col-sm-9">
+										<input type="password"
+											   id="community_pw"
+											   name="community_pw"
+											   value={ this.state.formData.communityPW }
+											   onChange={ this.handleChange.bind(this) }
+											   className="form-control"
+											   required
 										/>
 									</div>
 									<div class="col-sm-3"></div>

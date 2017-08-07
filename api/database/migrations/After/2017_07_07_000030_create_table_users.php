@@ -13,7 +13,8 @@ class CreateTableUsers extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        
+         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
             $table->softDeletes();
@@ -46,8 +47,10 @@ class CreateTableUsers extends Migration
             $table->foreign('regional_center')->references('id')->on('regional_centers');
             $table->text('internal_note');
         });
+
+        $this->securePasswords();
     }
-    
+
     /**
      * Reverse the migrations.
      *
@@ -57,4 +60,23 @@ class CreateTableUsers extends Migration
     {
         Schema::drop('users');
     }
+
+    public function securePasswords()
+    {
+        $users = DB::table('users')
+            ->whereNull('users.deleted_at')
+            ->get();
+        
+        foreach ($users as $user) {
+            DB::table('users')->update([
+                array('password' => $this->HashPW($user->password))
+            ])
+            ->where('users.id', '=', $user->id);
+        }
+    }
+
+    private function HashPW($newPW) {
+        return password_hash($newPW, PASSWORD_BCRYPT);
+    }
 }
+
