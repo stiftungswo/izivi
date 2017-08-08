@@ -159,14 +159,14 @@ export default class MissionOverview extends Component {
                                     </div>
                                     <div class="modal-body">
                                         <div class="btn-group btn-block" data-toggle="buttons">
-                                            <label class="btn btn-info active" data-toggle="collapse" data-target="#datePickerContainer.in" style="width: 598px;border-radius: 5px;margin: 0px;">
+                                            <label class="btn btn-default active" data-toggle="collapse" data-target="#datePickerContainer.in" style="width: 598px;border-radius: 5px;margin: 0px;">
                                                 <input type="radio" name="time_type" value="0" defaultChecked="true" onchange={(e)=>{this.handleChange(e)}} /> Jahr:&nbsp;
                                                 <select name="time_year" defaultValue={curMonthDate.getFullYear()} onchange={(e)=>{this.handleChange(e)}} style="color: black;">
                                                     {yearoptions}
                                                 </select>
                                             </label>
 
-                                            <label class="btn btn-info"  data-toggle="collapse" data-target="#datePickerContainer:not(.in)" style="width: 598px;border-radius: 5px;margin: 0px;">
+                                            <label class="btn btn-default"  data-toggle="collapse" data-target="#datePickerContainer:not(.in)" style="width: 598px;border-radius: 5px;margin: 0px;">
                                                 <input type="radio" name="time_type" value="1" onchange={(e)=>{this.handleChange(e)}} /> Periode:&nbsp;
                                             </label>
                                             <div id="datePickerContainer" class="panel-collapse collapse ">
@@ -176,11 +176,11 @@ export default class MissionOverview extends Component {
                                                 </div>
                                             </div>
 
-                                            <label class="btn btn-info" data-toggle="collapse" data-target="#datePickerContainer.in" style="width: 598px;border-radius: 5px;margin: 0px;">
+                                            <label class="btn btn-default" data-toggle="collapse" data-target="#datePickerContainer.in" style="width: 598px;border-radius: 5px;margin: 0px;">
                                                 <input type="radio" name="time_type" value="2" onchange={(e)=>{this.handleChange(e)}} /> {this.monthNames[curMonthDate.getMonth()] + " " + curMonthDate.getFullYear()}
                                             </label>
 
-                                            <label class="btn btn-info" data-toggle="collapse" data-target="#datePickerContainer.in" style="width: 598px;border-radius: 5px;margin: 0px;">
+                                            <label class="btn btn-default" data-toggle="collapse" data-target="#datePickerContainer.in" style="width: 598px;border-radius: 5px;margin: 0px;">
                                                 <input type="radio" name="time_type" value="3" onchange={(e)=>{this.handleChange(e)}} /> {this.monthNames[prevMonthDate.getMonth()] + " " + prevMonthDate.getFullYear()}
                                             </label>
                                         </div>
@@ -200,10 +200,10 @@ export default class MissionOverview extends Component {
                                         <br/>
 
                                         <div class="btn-group  btn-group-justified" data-toggle="buttons">
-                                            <label class="btn btn-primary">
+                                            <label class="btn btn-info">
                                                 <input type="radio" data-dismiss="modal" onchange={() => {this.showStatsExtended(0)}}/> Gesamtstatistik
                                             </label>
-                                            <label class="btn btn-primary">
+                                            <label class="btn btn-info">
                                                 <input type="radio" data-dismiss="modal" onchange={() => {this.showStatsExtended(1)}}/> Detailübersicht
                                             </label>
                                         </div>
