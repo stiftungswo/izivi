@@ -12,7 +12,6 @@ import Component from 'inferno-component';
 import ApiService from "../../utils/api";
 import LoadingView from "../tags/loading-view";
 import Header from "../tags/header";
-import moment from 'moment';
 
 
 export default class User extends Component {
@@ -126,6 +125,23 @@ export default class User extends Component {
             this.setState({loading: false, reportSheets: response.data})
         }).catch((error) => {
             this.setState({loading: false, error: error})
+        });
+    }
+
+    getMissionDraft(missionKey){
+        this.setState({loading:true, error:null});
+        axios.get(
+            ApiService.BASE_URL+'mission/'+missionKey+'/draft',
+            { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken')},
+                responseType: 'blob' }
+        ).then((response) => {
+            this.setState({
+                loading: false
+            });
+            let blob = new Blob([response.data], { type: 'application/pdf' } );
+            window.location = window.URL.createObjectURL(blob);
+        }).catch((error) => {
+            this.setState({error: error});
         });
     }
 
@@ -372,7 +388,7 @@ export default class User extends Component {
                 if(isAdmin){
                     deleteButton.push(<button class="btn btn-xs" onClick={()=>{if(confirm('Möchten Sie diesen Einsatz wirklich löschen?')){ this.deleteMission(curMission) }}}>löschen</button>);
                 }
-                missions.push(<tr><td>{name}</td><td>{moment(m[i].start, 'YYYY-MM-DD').format('DD.MM.YYYY')}</td><td>{moment(m[i].end, 'YYYY-MM-DD').format('DD.MM.YYYY')}</td><td><button class="btn btn-xs" data-toggle="modal" data-target={'#einsatzModal'+m[i].id}>bearbeiten</button></td><td><button class="btn btn-xs">drucken</button></td><td>{deleteButton}</td></tr>)
+                missions.push(<tr><td>{name}</td><td>{moment(m[i].start, 'YYYY-MM-DD').format('DD.MM.YYYY')}</td><td>{moment(m[i].end, 'YYYY-MM-DD').format('DD.MM.YYYY')}</td><td><button class="btn btn-xs" data-toggle="modal" data-target={'#einsatzModal'+m[i].id}>bearbeiten</button></td><td><button class="btn btn-xs" onClick={()=>{this.getMissionDraft(curMission.id)}}>drucken</button></td><td>{deleteButton}</td></tr>)
                 missions.push(this.getEditModal(m[i], isAdmin))
             }
         }
