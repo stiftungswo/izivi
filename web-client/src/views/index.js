@@ -26,13 +26,9 @@ import Help from './pages/help';
 import Error404 from './pages/errors/404';
 import ChangePassword from "./pages/changePassword";
 
-const checkToken = ({props}) => {
-	console.log("checkToken called")
-}
-
 const authorizedOnly = ({ router }) => {
 	if (localStorage.getItem("jwtToken") === null) {
-    	router.push('/login');
+    	router.push('/login')
 	}
 }
 
