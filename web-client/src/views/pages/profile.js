@@ -238,7 +238,7 @@ export default class User extends Component {
                 if(isAdmin){
                     deleteButton.push(<button class="btn btn-xs" onClick={()=>{if(confirm('Möchten Sie diesen Einsatz wirklich löschen?')){ this.deleteMission(curMission) }}}>löschen</button>);
                 }
-                missions.push(<tr><td>{name}</td><td>{m[i].start}</td><td>{m[i].end}</td><td><button class="btn btn-xs">drucken</button></td><td>{deleteButton}</td></tr>)
+                missions.push(<tr><td>{name}</td><td>{moment(m[i].start, 'YYYY-MM-DD').format('DD.MM.YYYY')}</td><td>{moment(m[i].end, 'YYYY-MM-DD').format('DD.MM.YYYY')}</td><td><button class="btn btn-xs">drucken</button></td><td>{deleteButton}</td></tr>)
             }
         }
 
@@ -414,14 +414,18 @@ export default class User extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                { this.state.reportSheets.map(obj =>
-                                            <tr>
-                                                <td>{ obj.start }</td>
-                                                <td>{ obj.end }</td>
-                                                <td>{ moment(obj.end,'YYYY-MM-DD').diff(moment(obj.start,'YYYY-MM-DD'), 'days') }</td>
-                                                <td><button name="reportSheet" class="btn btn-xs" onClick={ () => this.showReportSheet(obj.id) }>Spesenrapport</button></td>
-                                            </tr>
-                                ) }     
+
+                                { this.state.reportSheets.length
+                                    ? this.state.reportSheets.map(obj =>
+                                        <tr>
+                                            <td>{ moment(obj.start, 'YYYY-MM-DD').format('DD.MM.YYYY') }</td>
+                                            <td>{ moment(obj.end, 'YYYY-MM-DD').format('DD.MM.YYYY') }</td>
+                                            <td>{ moment(obj.end, 'YYYY-MM-DD').diff(moment(obj.start, 'YYYY-MM-DD'), 'days') }</td>
+                                            <td><button name="reportSheet" class="btn btn-xs" onClick={ () => this.showReportSheet(obj.id) }>Spesenrapport</button></td>
+                                        </tr>
+                                    )
+                                    : null
+                                } 
                             </tbody>
                         </table>
 
