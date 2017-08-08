@@ -123,6 +123,11 @@ export default class MissionOverview extends Component {
             yearoptions.push(<option value={i}>{i}</option>)
         }
 
+        var datepicker = <div id="datePickerContainer" class="panel-collapse collapse">
+            <DatePicker id="time_from" label="Datum von" value={new Date()} callback={(e)=>{this.handleChange(e)}} callbackOrigin={this} />
+            <DatePicker id="time_to" label="Datum zu" value={new Date()} callback={(e)=>{this.handleChange(e)}} callbackOrigin={this} />
+        </div>
+
 		return (
 		    <Header>
                 <div className="page page__expense">
@@ -142,17 +147,14 @@ export default class MissionOverview extends Component {
                                         <h4 class="modal-title">Spesenstatistik erstellen</h4>
                                     </div>
                                     <div class="modal-body">
-
                                         <label><input type="radio" name="time_type" value="0" defaultChecked="true" onchange={(e)=>{this.handleChange(e)}}/> Jahr:&nbsp;</label>
                                         <select name="time_year" defaultValue={curMonthDate.getFullYear()} onchange={(e)=>{this.handleChange(e)}}>
                                             {yearoptions}
                                         </select>
                                         <br/>
 
-                                        <label><input type="radio" name="time_type" value="1" onchange={(e)=>{this.handleChange(e)}}/> Periode:&nbsp;</label>
-                                        <DatePicker id="time_from" label="Datum von" value={new Date()} callback={(e)=>{this.handleChange(e)}} callbackOrigin={this} />
-                                        <DatePicker id="time_to" label="Datum zu" value={new Date()} callback={(e)=>{this.handleChange(e)}} callbackOrigin={this} />
-                                        <div id="picker-container"></div>
+                                        <label><input type="radio" name="time_type" value="1" onchange={(e)=>{this.handleChange(e)}} data-toggle="collapse" data-target="#datePickerContainer"/> Periode:&nbsp;</label>
+                                            {datepicker}
                                         <br/>
 
                                         <label><input type="radio" name="time_type" value="2" onchange={(e)=>{this.handleChange(e)}}/> {this.monthNames[curMonthDate.getMonth()]} {curMonthDate.getFullYear()}</label><br/>
