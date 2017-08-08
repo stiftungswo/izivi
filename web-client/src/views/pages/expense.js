@@ -18,7 +18,9 @@ export default class MissionOverview extends Component {
             name:'',
             start:'',
             end:'',
-
+            time_from: null,
+            time_to: null,
+            lastDateValue: new Date(),
             time_type:0,
             time_year:new Date().getFullYear(),
             showOnlyDoneSheets:1
@@ -54,6 +56,20 @@ export default class MissionOverview extends Component {
         const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
         this.state[e.target.name] = value;
         this.setState(this.state);
+    }
+
+    handleDateChange(e, origin) {
+        let value = e.target.value;
+
+        if(value === undefined || value == null || value == "") {
+            value = origin.state.lastDateValue;
+        }
+        else {
+            value = DatePicker.dateFormat_CH2EN(value);
+        }
+
+        origin.state[e.target.name] = value;
+        origin.setState(this.state);
     }
 
     showStatsExtended(showDetails){
@@ -96,7 +112,7 @@ export default class MissionOverview extends Component {
             if(this.state.start!='' && sheets[i].end < this.state.start){
                 continue;
             }
-            if(this.state.end!='' && sheets[i].start>this.state.end){
+            if(this.state.end!='' && sheets[i].start > this.state.end){
                 continue;
             }
 
@@ -143,28 +159,28 @@ export default class MissionOverview extends Component {
                                     </div>
                                     <div class="modal-body">
                                         <div class="btn-group btn-block" data-toggle="buttons">
-                                            <label class="btn btn-info active" data-toggle="collapse" data-target="#datePickerContainer.in" style="width:100%">
+                                            <label class="btn btn-info active" data-toggle="collapse" data-target="#datePickerContainer.in" style="width: 598px;border-radius: 5px;margin: 0px;">
                                                 <input type="radio" name="time_type" value="0" defaultChecked="true" onchange={(e)=>{this.handleChange(e)}} /> Jahr:&nbsp;
                                                 <select name="time_year" defaultValue={curMonthDate.getFullYear()} onchange={(e)=>{this.handleChange(e)}} style="color: black;">
                                                     {yearoptions}
                                                 </select>
                                             </label>
 
-                                            <label class="btn btn-info "  data-toggle="collapse" data-target="#datePickerContainer:not(.in)" style="width:100%">
+                                            <label class="btn btn-info"  data-toggle="collapse" data-target="#datePickerContainer:not(.in)" style="width: 598px;border-radius: 5px;margin: 0px;">
                                                 <input type="radio" name="time_type" value="1" onchange={(e)=>{this.handleChange(e)}} /> Periode:&nbsp;
                                             </label>
                                             <div id="datePickerContainer" class="panel-collapse collapse ">
                                                 <div class="btn-group-justified">
-                                                    <label  class="btn"><DatePicker id="time_from" label="Von" value={new Date()} callback={(e)=>{this.handleChange(e)}} callbackOrigin={this} /></label>
-                                                    <label  class="btn"><DatePicker id="time_to" label="Zu" value={new Date()} callback={(e)=>{this.handleChange(e)}} callbackOrigin={this} /></label>
+                                                    <label  class="btn"><DatePicker id="time_from" label="Von" value={this.state.time_from} callback={this.handleDateChange} callbackOrigin={this} /></label>
+                                                    <label  class="btn"><DatePicker id="time_to" label="Zu" value={this.state.time_to} callback={this.handleDateChange} callbackOrigin={this} /></label>
                                                 </div>
                                             </div>
 
-                                            <label class="btn btn-info" data-toggle="collapse" data-target="#datePickerContainer.in" style="width:100%">
+                                            <label class="btn btn-info" data-toggle="collapse" data-target="#datePickerContainer.in" style="width: 598px;border-radius: 5px;margin: 0px;">
                                                 <input type="radio" name="time_type" value="2" onchange={(e)=>{this.handleChange(e)}} /> {this.monthNames[curMonthDate.getMonth()] + " " + curMonthDate.getFullYear()}
                                             </label>
 
-                                            <label class="btn btn-info" data-toggle="collapse" data-target="#datePickerContainer.in" style="width:100%">
+                                            <label class="btn btn-info" data-toggle="collapse" data-target="#datePickerContainer.in" style="width: 598px;border-radius: 5px;margin: 0px;">
                                                 <input type="radio" name="time_type" value="3" onchange={(e)=>{this.handleChange(e)}} /> {this.monthNames[prevMonthDate.getMonth()] + " " + prevMonthDate.getFullYear()}
                                             </label>
                                         </div>
