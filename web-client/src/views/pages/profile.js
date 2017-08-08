@@ -186,6 +186,22 @@ export default class User extends Component {
 
     }
 
+    showReportSheet(id) {
+        this.setState({loading: true, error: null})
+        axios.get(
+            ApiService.BASE_URL+'pdf/zivireportsheet?reportSheetId='+id,
+            {   headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') },
+                responseType: 'blob'
+            }
+        ).then((response) => {
+        	this.setState({loading: false})
+            let blob = new Blob([response.data], { type: 'application/pdf' } )
+            window.location = window.URL.createObjectURL(blob)
+        }).catch((error) => {
+            this.setState({loading: false, error: error})
+        })
+    }
+
     render() {
 
         var jwtDecode = require('jwt-decode');
@@ -403,7 +419,7 @@ export default class User extends Component {
                                                 <td>{ obj.start }</td>
                                                 <td>{ obj.end }</td>
                                                 <td>{ moment(obj.end,'YYYY-MM-DD').diff(moment(obj.start,'YYYY-MM-DD'), 'days') }</td>
-                                                <td><button name="reportSheet" class="btn btn-xs" onClick="">Spesenrapport</button></td>
+                                                <td><button name="reportSheet" class="btn btn-xs" onClick={ () => this.showReportSheet(obj.id) }>Spesenrapport</button></td>
                                             </tr>
                                 ) }     
                             </tbody>
