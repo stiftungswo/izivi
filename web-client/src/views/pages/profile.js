@@ -1,6 +1,5 @@
 import Inferno from 'inferno';
 import { Link } from 'inferno-router';
-import { connect } from 'inferno-mobx'
 
 import Card from '../tags/card';
 import InputField from '../tags/InputField';
@@ -15,7 +14,6 @@ import ApiService from "../../utils/api";
 import LoadingView from "../tags/loading-view";
 import Header from "../tags/header";
 
-@connect(['accountStore'])
 export default class User extends Component {
     constructor(props, {router}) {
         super(props);
@@ -380,37 +378,27 @@ export default class User extends Component {
     }
 
     getInternalNote(result) {
-
-        if(this.props.params.userid) {
-            return (
-                <div class="form-group">
-                    <label class="control-label col-sm-3" for="internal_comment">Int. Bemerkung</label>
-                    <div class="col-sm-9">
-                        <textarea rows="4" id="internal_note" name="internal_note" class="form-control"
-                                  onChange={(e) => this.handleTextareaChange(e)}>{result.internal_note}</textarea>
-                    </div>
+        return (
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="internal_comment">Int. Bemerkung</label>
+                <div class="col-sm-9">
+                    <textarea rows="4" id="internal_note" name="internal_note" class="form-control"
+                                onChange={(e) => this.handleTextareaChange(e)}>{result.internal_note}</textarea>
                 </div>
-            );
-        }
+            </div>
+        );
     }
 
     getPasswordChangeButton() {
-        if(!this.props.params.userid) {
-            return (
-                <div>
-                    <button name="resetPassword" class="btn btn-primary" onClick={(e)=>this.redirectToChangePassword(e)}>Passwort ändern</button>
-                    <hr />
-                </div>
-            )
-        }
+        return (
+            <div>
+                <button type="button" name="resetPassword" class="btn btn-primary" onClick={(e)=>this.redirectToChangePassword(e)}>Passwort ändern</button>
+                <hr />
+            </div>
+        )
     }
 
     render() {
-
-        var jwtDecode = require('jwt-decode');
-        var decodedToken = jwtDecode(localStorage.getItem('jwtToken'));
-        var isAdmin = decodedToken.isAdmin;
-
         let result = this.state.result;
         let howerText_IBAN = "IBAN nummer";
         let howerText_Post = "Postkonto Nummer";
@@ -429,11 +417,11 @@ export default class User extends Component {
                 }
                 let curMission = m[i];
                 var deleteButton = [];
-                if(isAdmin){
+                if(ApiService.isAdmin()){
                     deleteButton.push(<button class="btn btn-xs" onClick={()=>{if(confirm('Möchten Sie diesen Einsatz wirklich löschen?')){ this.deleteMission(curMission) }}}>löschen</button>);
                 }
                 missions.push(<tr><td>{name}</td><td>{moment(m[i].start, 'YYYY-MM-DD').format('DD.MM.YYYY')}</td><td>{moment(m[i].end, 'YYYY-MM-DD').format('DD.MM.YYYY')}</td><td><button class="btn btn-xs" data-toggle="modal" data-target={'#einsatzModal'+m[i].id}>bearbeiten</button></td><td><button class="btn btn-xs" onClick={()=>{this.getMissionDraft(curMission.id)}}>drucken</button></td><td>{deleteButton}</td></tr>)
-                missions.push(this.getEditModal(m[i], isAdmin))
+                missions.push(this.getEditModal(m[i], ApiService.isAdmin()))
             }
         }
 
@@ -444,7 +432,7 @@ export default class User extends Component {
                         <h1>Profil</h1>
                         <div class="container">
 
-                        <form class="form-horizontal">
+                        <form class="form-horizontal" action="javascript:;" onSubmit={()=>{this.save()}}>
                             <hr />
                             { this.getPasswordChangeButton() }
                             <input name="id" value="00000" type="hidden"/>
@@ -525,9 +513,11 @@ export default class User extends Component {
 							 <InputCheckbox id="half_fare_travelcard" value={result.half_fare_travelcard} label="Halbtax" self={this} />
 							 <InputField id="other_fare_network" label="Andere Abos" value={result.other_fare_network} self={this} />
 
-                            {this.getInternalNote(result)}
+                            {ApiService.isAdmin()
+                            ? this.getInternalNote(result)
+                            : null }
 
-                            <button type="submit" class="btn btn-primary" onclick={()=>{this.save()}}>Absenden</button>
+                            <button type="submit" class="btn btn-primary">Absenden</button>
                         </form>
 
                         <hr />
@@ -548,7 +538,7 @@ export default class User extends Component {
                         </table>
                         <button class="btn btn-primary" data-toggle="modal" data-target="#einsatzModal">Neue Einsatzplanung hinzufügen</button>
 
-                        {this.getEditModal(null, isAdmin)}
+                        {this.getEditModal(null, ApiService.isAdmin())}
 
                         <hr />
                         <h3>Meldeblätter</h3>
@@ -558,8 +548,15 @@ export default class User extends Component {
                                     <th>Von</th>
                                     <th>Bis</th>
                                     <th>Tage</th>
+                                    {ApiService.isAdmin()
+                                        ? <th>Erledigt</th>
+                                        : null
+                                    }
                                     <th></th>
-                                    <th></th>
+                                    {ApiService.isAdmin()
+                                        ? <th></th>
+                                        : null
+                                    }
                                 </tr>
                             </thead>
                             <tbody>
@@ -569,8 +566,14 @@ export default class User extends Component {
                                             <td>{ moment(obj.start, 'YYYY-MM-DD').format('DD.MM.YYYY') }</td>
                                             <td>{ moment(obj.end, 'YYYY-MM-DD').format('DD.MM.YYYY') }</td>
                                             <td>{ moment(obj.end, 'YYYY-MM-DD').diff(moment(obj.start, 'YYYY-MM-DD'), 'days') }</td>
-                                            {this.props.accountStore.isLoggedIn ? <td><button name="showReportSheet" class="btn btn-xs" onClick={ () => this.showReportSheet(obj.id) }>Spesenrapport anzeigen</button></td> : null }
-                                            {this.props.accountStore.isAdmin ? <td><button name="editReportSheet" class="btn btn-xs" onClick={ () => this.router.push('/expense/' + obj.id) }>Spesen bearbeiten</button></td> : null }
+                                            {ApiService.isAdmin()
+                                                ? obj.done === 1
+                                                    ? <td>&#9989;</td>
+                                                    : <td></td>
+                                                : null
+                                            }
+                                            <td><button name="showReportSheet" class="btn btn-xs" onClick={ () => this.showReportSheet(obj.id) }>Spesenrapport anzeigen</button></td>
+                                            {ApiService.isAdmin() ? <td><button name="editReportSheet" class="btn btn-xs" onClick={ () => this.router.push('/expense/' + obj.id) }>Spesen bearbeiten</button></td> : null }
                                         </tr>
                                     )
                                     : null

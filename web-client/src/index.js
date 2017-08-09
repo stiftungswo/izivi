@@ -1,24 +1,14 @@
 import Inferno from 'inferno';
 import { Router } from 'inferno-router';
-import { Provider } from 'inferno-mobx';
 import { createBrowserHistory } from 'history';
-import { observable } from 'mobx'
 import views from './views';
 import './index.sass';
 import 'bootstrap/dist/css/bootstrap.css'
 
 const browserHistory = createBrowserHistory();
 
-const accountStore = observable({
-	email: null,
-	isLoggedIn: false,
-	isAdmin: false
-})
-
 Inferno.render((
-	<Provider accountStore={ accountStore }>
-		<Router history={ browserHistory }>{ views }</Router>
-	</Provider>
+	<Router history={ browserHistory }>{ views }</Router>
 ), document.getElementById('root'));
 
 if (process.env.NODE_ENV === 'production') {
