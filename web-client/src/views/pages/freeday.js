@@ -6,6 +6,7 @@ import Component from 'inferno-component';
 import ApiService from "../../utils/api";
 import LoadingView from "../tags/loading-view";
 import Header from "../tags/header";
+import DatePicker from '../tags/DatePicker';
 
 
 export default class Freeday extends Component {
@@ -21,6 +22,7 @@ export default class Freeday extends Component {
     componentDidMount()
     {
         this.getFreedays()
+        DatePicker.initializeDatePicker();
     }
 
     getFreedays() {
@@ -42,6 +44,20 @@ export default class Freeday extends Component {
         const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
         this.state['freedays'][i][e.target.name] = value;
         this.setState(this.state);
+    }
+
+    handleDateChange(e, origin) {
+        let value = e.target.value;
+
+        if(value === undefined || value == null || value == "") {
+            value = origin.state.lastDateValue;
+        }
+        else {
+            value = DatePicker.dateFormat_CH2EN(value);
+        }
+
+        origin.state['newFreeday'][e.target.name] = value;
+        origin.setState(this.state);
     }
 
     save(i){
@@ -96,8 +112,8 @@ export default class Freeday extends Component {
 
         tbody.push(
 			<tr>
-				<td><input class="form-control" type="date" name="date_from" value={this.state.newFreeday.date_from} onChange={(e)=>this.handleChangeNew(e)}/></td>
-				<td><input class="form-control" type="date" name="date_to" value={this.state.newFreeday.date_to} onChange={(e)=>this.handleChangeNew(e)}/></td>
+                <td><DatePicker id="date_from" value={ this.state.newFreeday.date_from } callback={this.handleDateChange} callbackOrigin={this} /></td>
+                <td><DatePicker id="date_to" value={ this.state.newFreeday.date_to } callback={this.handleDateChange} callbackOrigin={this} /></td>
 				<td><select class="form-control" name="holiday_type" value={this.state.newFreeday.holiday_type} onChange={(e)=>this.handleChangeNew(e)}>
 					<option value="2">Feiertag</option>
 					<option value="1">Betriebsferien</option>
@@ -111,8 +127,8 @@ export default class Freeday extends Component {
         for(let i=0;i<freedays.length;i++) {
             tbody.push(
             	<tr>
-					<td><input class="form-control" type="date" name="date_from" value={freedays[i].date_from} onChange={(e)=>this.handleChange(e, i)}/></td>
-					<td><input class="form-control" type="date" name="date_to" value={freedays[i].date_to} onChange={(e)=>this.handleChange(e, i)}/></td>
+					<td><DatePicker id="date_from" value={ freedays[i].date_from } callback={this.handleDateChange} callbackOrigin={this} /></td>
+					<td><DatePicker id="date_to" value={ freedays[i].date_to } callback={this.handleDateChange} callbackOrigin={this} /></td>
 					<td><select class="form-control" name="holiday_type" value={''+freedays[i].holiday_type} onChange={(e)=>this.handleChange(e, i)}>
 						<option value="2">Feiertag</option>
 						<option value="1">Betriebsferien</option>
