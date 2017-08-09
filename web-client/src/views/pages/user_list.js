@@ -6,18 +6,23 @@ import Component from 'inferno-component';
 import ApiService from "../../utils/api";
 import LoadingView from "../tags/loading-view";
 import Header from "../tags/header";
+import DatePicker from '../tags/DatePicker';
 
 
 export default class UserList extends Component {
     constructor(props) {
         super(props);
 
+        var date = new Date();
+        var firstDay = new Date("2000", date.getMonth(), 1).toISOString().slice(0, 10)
+        var lastDay = new Date(date.getFullYear() + 5, date.getMonth(), 1).toISOString().slice(0, 10);
+
         this.state = {
             users: [],
             zdp: '',
             name:'',
-            start:'',
-            end:'',
+            start:firstDay,
+            end:lastDay,
             active:'',
             group:0
         };
@@ -26,6 +31,7 @@ export default class UserList extends Component {
     componentDidMount()
     {
         this.getUsers()
+        DatePicker.initializeDatePicker();
     }
 
     getUsers() {
@@ -49,6 +55,23 @@ export default class UserList extends Component {
         this.setState(this.state);
     }
 
+    handleDateChange(e, origin) {
+        let value = e.target.value;
+
+        if(value === undefined || value == null || value == "") {
+            value = origin.state.lastDateValue;
+        }
+        else {
+            value = DatePicker.dateFormat_CH2EN(value);
+        }
+
+        value = value.slice(0, 10)
+        console.log("value = ", value)
+
+        origin.state[e.target.name] = value;
+        origin.setState(this.state);
+    }
+
     deleteUser(user){
         axios.delete(
             ApiService.BASE_URL+'user/'+user.id,
@@ -62,6 +85,7 @@ export default class UserList extends Component {
 
     render() {
 
+        console.log("state start = ", this.state.start)
         var temp = [];
         var users = this.state.users;
         for(let i=0;i<users.length;i++) {
@@ -119,10 +143,10 @@ export default class UserList extends Component {
                                         <input class="SWOInput" name="name" size="15" type="text" value={ this.state.name } oninput={ this.handleChange.bind(this) }/>
                                     </td>
                                     <td>
-                                        <input class="SWOInput" name="start" size="10" type="date" value={ this.state.start } oninput={ this.handleChange.bind(this) }/>
+                                        <DatePicker class="SWOInput" id="start" value={ this.state.start } callback={this.handleDateChange} callbackOrigin={this} />
                                     </td>
                                     <td>
-                                        <input class="SWOInput" name="end" size="10" type="date" value={ this.state.end } oninput={ this.handleChange.bind(this) }/>
+                                        <DatePicker class="SWOInput" id="end" value={ this.state.end } callback={this.handleDateChange} callbackOrigin={this} />
                                     </td>
                                     <td className="hidden-xs">
                                         <input class="SWOInput" name="active" type="checkbox" value={ this.state.active } onchange={ this.handleChange.bind(this) }/>

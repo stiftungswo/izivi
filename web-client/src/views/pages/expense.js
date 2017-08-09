@@ -12,15 +12,19 @@ export default class MissionOverview extends Component {
     constructor(props) {
         super(props);
 
+        var date = new Date();
+        var firstDay = new Date(date.getFullYear(), date.getMonth(), 1).toISOString();
+        var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString();
+
         this.state = {
         	report_sheets: [],
             zdp: '',
             name:'',
             start:'',
             end:'',
-            time_from: null,
-            time_to: null,
-            lastDateValue: new Date(),
+            time_from: firstDay,
+            time_to: lastDay,
+            lastDateValue: new Date().toISOString(),
             time_type:0,
             time_year:new Date().getFullYear(),
             showOnlyDoneSheets:1
@@ -30,6 +34,7 @@ export default class MissionOverview extends Component {
     componentDidMount()
     {
         this.getReportSheets('reportsheet');
+        DatePicker.initializeDatePicker();
     }
 
     getReportSheets(url) {
@@ -242,10 +247,10 @@ export default class MissionOverview extends Component {
                                         <input class="SWOInput" name="name" size="15" type="text" value={ this.state.name } oninput={ this.handleChange.bind(this) }/>
                                     </td>
                                     <td>
-                                        <input class="SWOInput" name="start" size="10" type="date" value={ this.state.start } oninput={ this.handleChange.bind(this) }/>
+                                        <DatePicker id="start" value={null} callback={this.handleDateChange} callbackOrigin={this} />
                                     </td>
                                     <td>
-                                        <input class="SWOInput" name="end" size="10" type="date" value={ this.state.end } oninput={ this.handleChange.bind(this) }/>
+                                        <DatePicker id="end" value={null} callback={this.handleDateChange} callbackOrigin={this} />
                                     </td>
                                     <td></td>
                                     <td></td>
@@ -262,9 +267,5 @@ export default class MissionOverview extends Component {
                 </div>
             </Header>
 		);
-    }
-
-    componentDidUpdate() {
-        DatePicker.initializeDatePicker();
     }
 }
