@@ -36,7 +36,7 @@ export default class Header extends Component {
 
 				// Operations
 				<BootstrapNavLink to="/mission_overview" >Planung</BootstrapNavLink>,
-				<BootstrapNavLink to="/expense" mobileHidden="true">Spesen</BootstrapNavLink>,
+				<BootstrapNavLink to="/expense">Spesen</BootstrapNavLink>,
 			]
 		);
 	}
