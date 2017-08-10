@@ -153,10 +153,13 @@ export default class Missions extends Component {
                 newMission,
                 { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
             ).then((response) => {
+                Toast.showSuccess('Speichern erfolgreich', 'Neuer Einsatz konnte gespeichert werden')
                 $("[data-dismiss=modal]").trigger({ type: "click" });
                 self.getUser();
             }).catch((error) => {
-                self.setState({error: error});
+                Toast.showError('Speichern fehlgeschlagen', 'Neuer Einsatz konnte nicht gespeichert werden')
+                //TODO ERROR Handling!!!
+                //this.setState({error: error});
             });
         }else{
             axios.post(
@@ -164,10 +167,13 @@ export default class Missions extends Component {
                 newMission,
                 { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
             ).then((response) => {
+                Toast.showSuccess('Speichern erfolgreich', 'Einsatz konnte gespeichert werden')
                 $("[data-dismiss=modal]").trigger({ type: "click" });
                 self.getUser();
             }).catch((error) => {
-                self.setState({error: error});
+                Toast.showError('Speichern fehlgeschlagen', 'Einsatz konnte nicht gespeichert werden')
+                //TODO ERROR Handling!!!
+                //this.setState({error: error});
             });
         }
     }
@@ -179,9 +185,12 @@ export default class Missions extends Component {
             ApiService.BASE_URL+'mission/'+mission.id,
             { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
         ).then((response) => {
+            Toast.showSuccess('Löschen erfolgreich', 'Einsatz konnte gelöscht werden')
             self.getUser();
         }).catch((error) => {
-            self.setState({error: error});
+            Toast.showError('Löschen fehlgeschlagen', 'Einsatz konnte nicht gelöscht werden')
+            //TODO ERROR Handling!!!
+            //this.setState({error: error});
         });
 
     }
