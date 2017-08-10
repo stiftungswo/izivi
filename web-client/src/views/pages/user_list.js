@@ -80,9 +80,7 @@ export default class UserList extends Component {
             Toast.showSuccess('Löschen erfolgreich', 'Benutzer wurde erfolgreich gelöscht')
             this.getUsers();
         }).catch((error) => {
-            Toast.showError('Löschen fehlgeschlagen', 'Benutzer konnte nicht gelöscht werden')
-            //TODO ERROR Handling!!!
-            //this.setState({error: error});
+            Toast.showError('Löschen fehlgeschlagen', 'Benutzer konnte nicht gelöscht werden', error, this.context)
         });
     }
 
