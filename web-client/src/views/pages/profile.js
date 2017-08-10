@@ -373,7 +373,7 @@ export default class User extends Component {
                                         <tr>
                                             <td>{ moment(obj.start, 'YYYY-MM-DD').format('DD.MM.YYYY') }</td>
                                             <td>{ moment(obj.end, 'YYYY-MM-DD').format('DD.MM.YYYY') }</td>
-                                            <td>{ moment(obj.end, 'YYYY-MM-DD').diff(moment(obj.start, 'YYYY-MM-DD'), 'days') }</td>
+                                            <td>{ obj.days }</td>
                                             {ApiService.isAdmin()
                                                 ? obj.done === 1
                                                     ? <td>&#9989;</td>
