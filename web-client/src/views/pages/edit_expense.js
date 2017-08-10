@@ -6,6 +6,7 @@ import Component from 'inferno-component';
 import ApiService from "../../utils/api";
 import LoadingView from "../tags/loading-view";
 import Header from "../tags/header";
+import DatePicker from "../tags/DatePicker";
 
 export default class EditExpense extends Component {
     constructor(props) {
@@ -20,6 +21,11 @@ export default class EditExpense extends Component {
     {
         this.getReportSheet();
     }
+
+    componentDidUpdate()
+	{
+		DatePicker.initializeDatePicker();
+	}
 
     getReportSheet() {
         this.setState({loading:true, error:null});
@@ -42,6 +48,20 @@ export default class EditExpense extends Component {
         this.setState(this.state);
     }
 
+	handleDateChange(e, origin) {
+		let value = e.target.value;
+
+		if(value === undefined || value == null || value == "") {
+			value = origin.state.lastDateValue;
+		}
+		else {
+			value = DatePicker.dateFormat_CH2EN(value);
+		}
+
+		origin.state['report_sheet'][e.target.name] = value;
+		origin.setState(this.state);
+	}
+
     save(){
         this.setState({loading:true, error:null});
         axios.post(
@@ -49,9 +69,10 @@ export default class EditExpense extends Component {
             this.state.report_sheet,
             { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
         ).then((response) => {
+            Toast.showSuccess('Speichern erfolgreich', 'Spesen konnte gespeichert werden')
             this.getReportSheet();
         }).catch((error) => {
-            this.setState({error: error});
+            Toast.showError('Speichern fehlgeschlagen', 'Spesen konnte nicht gespeichert werden', error, this.context)
         });
 	}
 
@@ -88,186 +109,186 @@ export default class EditExpense extends Component {
 				<table border="0" cellspacing="0" cellpadding="4" class="table">
 
 					<tbody><tr>
-						<td class="todd">Pflichtenheft</td>
-						<td class="todd">{sheet.pflichtenheft_id} {sheet.pflichtenheft_name}</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">&nbsp;</td>
+						<td>Pflichtenheft</td>
+						<td>{sheet.pflichtenheft_id} {sheet.pflichtenheft_name}</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
 					</tr>
 					<tr>
-						<td class="teven">Beginn Einsatz</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven" align="right">{sheet.einsaetze_start}</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">&nbsp;</td>
+						<td>Beginn Einsatz</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right">{sheet.einsaetze_start}</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
 					</tr>
 					<tr>
-						<td class="teven">Ende Einsatz</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven" align="right">{sheet.einsaetze_end}</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">&nbsp;</td>
+						<td>Ende Einsatz</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right">{sheet.einsaetze_end}</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
 					</tr>
 					<tr>
-						<td class="teven">Ferienanspruch für Einsatz</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven" align="right">{sheet.einsaetze_eligibleholiday}</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">&nbsp;</td>
+						<td>Ferienanspruch für Einsatz</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right">{sheet.einsaetze_eligibleholiday}</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
 					</tr>
 					<tr>
-						<td class="todd">Beginn Meldeblattperiode</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd" align="right">{sheet.meldeblaetter_start}</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">&nbsp;</td>
+						<td>Beginn Meldeblattperiode</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right">{sheet.meldeblaetter_start}</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
 					</tr>
 					<tr>
-						<td class="teven">Ende Meldeblattperiode</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven" align="right">{sheet.meldeblaetter_end}</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">&nbsp;</td>
+						<td>Ende Meldeblattperiode</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right">{sheet.meldeblaetter_end}</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
 					</tr>
 					<tr>
-						<td class="todd">Dauer</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd" align="right">{sheet.sum_tage} Tage</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">&nbsp;</td>
+						<td>Dauer</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right">{sheet.sum_tage} Tage</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
 					</tr>
 					<tr>
-						<td class="teven">Arbeit</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">{sheet.meldeblaetter_workdays_proposal} Tage</td>
-						<td class="teven" align="right"><input type="text" name="meldeblaetter_workdays" value={sheet.meldeblaetter_workdays} size="2" onchange={(e)=>(this.handleChange(e))}/> Tage</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven" align="left">Bemerkungen: <input type="text" name="meldeblaetter_work_comment" value={sheet.meldeblaetter_work_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
+						<td>Arbeit</td>
+						<td>&nbsp;</td>
+						<td>{sheet.meldeblaetter_workdays_proposal} Tage</td>
+						<td align="right"><input type="text" name="meldeblaetter_workdays" value={sheet.meldeblaetter_workdays} size="2" onchange={(e)=>(this.handleChange(e))}/> Tage</td>
+						<td>&nbsp;</td>
+						<td align="left">Bemerkungen: <input type="text" name="meldeblaetter_work_comment" value={sheet.meldeblaetter_work_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
 					</tr>
 					<tr>
-						<td class="todd">Arbeitsfrei</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">{sheet.meldeblaetter_workfreedays_proposal} Tage</td>
-						<td class="todd" align="right"><input type="text" name="meldeblaetter_workfreedays" value={sheet.meldeblaetter_workfreedays} size="2"  onchange={(e)=>(this.handleChange(e))}/> Tage</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd" align="left">Bemerkungen: <input type="text" name="meldeblaetter_workfree_comment" value={sheet.meldeblaetter_workfree_comment} size="45"  onchange={(e)=>(this.handleChange(e))}/></td>
+						<td>Arbeitsfrei</td>
+						<td>&nbsp;</td>
+						<td>{sheet.meldeblaetter_workfreedays_proposal} Tage</td>
+						<td align="right"><input type="text" name="meldeblaetter_workfreedays" value={sheet.meldeblaetter_workfreedays} size="2"  onchange={(e)=>(this.handleChange(e))}/> Tage</td>
+						<td>&nbsp;</td>
+						<td align="left">Bemerkungen: <input type="text" name="meldeblaetter_workfree_comment" value={sheet.meldeblaetter_workfree_comment} size="45"  onchange={(e)=>(this.handleChange(e))}/></td>
 					</tr>
 					<tr>
-						<td class="teven">Betriebsferien (Urlaub)</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">{sheet.meldeblaetter_companyurlaub_proposal} Tage</td>
-						<td class="teven" align="right"><input type="text" name="meldeblaetter_companyurlaub" value={sheet.meldeblaetter_companyurlaub} size="2"  onchange={(e)=>(this.handleChange(e))}/> Tage</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven" align="left">Bemerkungen: <input type="text" name="meldeblaetter_compholiday_comment" value={sheet.meldeblaetter_compholiday_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
+						<td>Betriebsferien (Urlaub)</td>
+						<td>&nbsp;</td>
+						<td>{sheet.meldeblaetter_companyurlaub_proposal} Tage</td>
+						<td align="right"><input type="text" name="meldeblaetter_companyurlaub" value={sheet.meldeblaetter_companyurlaub} size="2"  onchange={(e)=>(this.handleChange(e))}/> Tage</td>
+						<td>&nbsp;</td>
+						<td align="left">Bemerkungen: <input type="text" name="meldeblaetter_compholiday_comment" value={sheet.meldeblaetter_compholiday_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
 					</tr>
 					<tr>
-						<td class="todd">Betriebsferien (Ferien)</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">{sheet.meldeblaetter_ferien_wegen_urlaub_proposal} Tage</td>
-						<td class="todd" align="right"><input type="text" name="meldeblaetter_ferien_wegen_urlaub" value={sheet.meldeblaetter_ferien_wegen_urlaub} size="2" onchange={(e)=>(this.handleChange(e))}/> Tage</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd" align="left">&nbsp;</td>
+						<td>Betriebsferien (Ferien)</td>
+						<td>&nbsp;</td>
+						<td>{sheet.meldeblaetter_ferien_wegen_urlaub_proposal} Tage</td>
+						<td align="right"><input type="text" name="meldeblaetter_ferien_wegen_urlaub" value={sheet.meldeblaetter_ferien_wegen_urlaub} size="2" onchange={(e)=>(this.handleChange(e))}/> Tage</td>
+						<td>&nbsp;</td>
+						<td align="left">&nbsp;</td>
 					</tr>
 					<tr>
-						<td class="teven">zusätzlich Arbeitsfrei</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven" align="right">{sheet.meldeblaetter_add_workfree} Tage</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">Bemerkungen: <input type="text" name="meldeblaetter_add_workfree_comment" value={sheet.meldeblaetter_add_workfree_comment} size="45"  onchange={(e)=>(this.handleChange(e))}/></td>
+						<td>zusätzlich Arbeitsfrei</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right">{sheet.meldeblaetter_add_workfree} Tage</td>
+						<td>&nbsp;</td>
+						<td>Bemerkungen: <input type="text" name="meldeblaetter_add_workfree_comment" value={sheet.meldeblaetter_add_workfree_comment} size="45"  onchange={(e)=>(this.handleChange(e))}/></td>
 					</tr>
 					<tr>
-						<td class="todd">Krankheit (Übriges Guthaben: {sheet.krankheitstage_verbleibend} Tage)</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd" align="right"><input type="text" name="meldeblaetter_ill" value={sheet.meldeblaetter_ill} size="2"  onchange={(e)=>(this.handleChange(e))}/> Tage</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">Bemerkungen: <input type="text" name="meldeblaetter_ill_comment" value={sheet.meldeblaetter_ill_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
+						<td>Krankheit (Übriges Guthaben: {sheet.krankheitstage_verbleibend} Tage)</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right"><input type="text" name="meldeblaetter_ill" value={sheet.meldeblaetter_ill} size="2"  onchange={(e)=>(this.handleChange(e))}/> Tage</td>
+						<td>&nbsp;</td>
+						<td>Bemerkungen: <input type="text" name="meldeblaetter_ill_comment" value={sheet.meldeblaetter_ill_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
 					</tr>
 					<tr>
-						<td class="teven">Ferien (Übriges Guthaben: {sheet.remaining_holidays} Tage)</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven" align="right"><input type="text" name="meldeblaetter_holiday" value={sheet.meldeblaetter_holiday} size="2"  onchange={(e)=>(this.handleChange(e))}/> Tage</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">Bemerkungen: <input type="text" name="meldeblaetter_holiday_comment" value={sheet.meldeblaetter_holiday_comment} size="45"  onchange={(e)=>(this.handleChange(e))}/></td>
+						<td>Ferien (Übriges Guthaben: {sheet.remaining_holidays} Tage)</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right"><input type="text" name="meldeblaetter_holiday" value={sheet.meldeblaetter_holiday} size="2"  onchange={(e)=>(this.handleChange(e))}/> Tage</td>
+						<td>&nbsp;</td>
+						<td>Bemerkungen: <input type="text" name="meldeblaetter_holiday_comment" value={sheet.meldeblaetter_holiday_comment} size="45"  onchange={(e)=>(this.handleChange(e))}/></td>
 					</tr>
 					<tr>
-						<td class="todd">Persönlicher Urlaub</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd" align="right"><input type="text" name="meldeblaetter_urlaub" value={sheet.meldeblaetter_urlaub} size="2"  onchange={(e)=>(this.handleChange(e))}/> Tage</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">Bemerkungen: <input type="text" name="meldeblaetter_urlaub_comment" value={sheet.meldeblaetter_urlaub_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
+						<td>Persönlicher Urlaub</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right"><input type="text" name="meldeblaetter_urlaub" value={sheet.meldeblaetter_urlaub} size="2"  onchange={(e)=>(this.handleChange(e))}/> Tage</td>
+						<td>&nbsp;</td>
+						<td>Bemerkungen: <input type="text" name="meldeblaetter_urlaub_comment" value={sheet.meldeblaetter_urlaub_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
 					</tr>
 					<tr>
-						<td class="teven">Kleiderspesen</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">{this.formatRappen(sheet.meldeblaetter_kleider_proposal)} Fr.</td>
-						<td class="teven" align="right"><input type="text" name="meldeblaetter_kleider" value={this.formatRappen(sheet.meldeblaetter_kleider)} size="5" onchange={(e)=>(this.handleChange(e))}/> Fr.</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">Bemerkungen: <input type="text" name="meldeblaetter_kleider_comment" value={sheet.meldeblaetter_kleider_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
+						<td>Kleiderspesen</td>
+						<td>&nbsp;</td>
+						<td>{this.formatRappen(sheet.meldeblaetter_kleider_proposal)} Fr.</td>
+						<td align="right"><input type="text" name="meldeblaetter_kleider" value={this.formatRappen(sheet.meldeblaetter_kleider)} size="5" onchange={(e)=>(this.handleChange(e))}/> Fr.</td>
+						<td>&nbsp;</td>
+						<td>Bemerkungen: <input type="text" name="meldeblaetter_kleider_comment" value={sheet.meldeblaetter_kleider_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
 					</tr>
 					<tr>
-						<td class="todd">Fahrspesen</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd" align="right"><input type="text" name="meldeblaetter_fahrspesen" value={this.formatRappen(sheet.meldeblaetter_fahrspesen)} size="5" onchange={(e)=>(this.handleChange(e))}/> Fr.</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">Bemerkungen: <input type="text" name="meldeblaetter_fahrspesen_comment" value={sheet.meldeblaetter_fahrspesen_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
+						<td>Fahrspesen</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right"><input type="text" name="meldeblaetter_fahrspesen" value={this.formatRappen(sheet.meldeblaetter_fahrspesen)} size="5" onchange={(e)=>(this.handleChange(e))}/> Fr.</td>
+						<td>&nbsp;</td>
+						<td>Bemerkungen: <input type="text" name="meldeblaetter_fahrspesen_comment" value={sheet.meldeblaetter_fahrspesen_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
 					</tr>
 					<tr>
-						<td class="teven">Ausserordentliche Spesen</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven" align="right"><input type="text" name="meldeblaetter_ausserordentlich" value={this.formatRappen(sheet.meldeblaetter_ausserordentlich)} size="5" onchange={(e)=>(this.handleChange(e))}/> Fr.</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">Bemerkungen: <input type="text" name="meldeblaetter_ausserordentlich_comment" value={sheet.meldeblaetter_ausserordentlich_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
+						<td>Ausserordentliche Spesen</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right"><input type="text" name="meldeblaetter_ausserordentlich" value={this.formatRappen(sheet.meldeblaetter_ausserordentlich)} size="5" onchange={(e)=>(this.handleChange(e))}/> Fr.</td>
+						<td>&nbsp;</td>
+						<td>Bemerkungen: <input type="text" name="meldeblaetter_ausserordentlich_comment" value={sheet.meldeblaetter_ausserordentlich_comment} size="45" onchange={(e)=>(this.handleChange(e))}/></td>
 					</tr>
 					<tr>
-						<td class="todd"><b>Total</b></td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd" align="right"><b>{this.formatRappen(sheet.total)} Fr.</b></td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">&nbsp;</td>
+						<td><b>Total</b></td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right"><b>{this.formatRappen(sheet.total)} Fr.</b></td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
 					</tr>
 					<tr>
-						<td class="teven">Konto-Nr.</td>
-						<td class="teven"></td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven" align="right"><input type="text" size="9" name="bank_account_number" value={sheet.bank_account_number} onchange={(e)=>(this.handleChange(e))}/></td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">&nbsp;</td>
+						<td>Konto-Nr.</td>
+						<td></td>
+						<td>&nbsp;</td>
+						<td align="right"><input type="text" size="9" name="bank_account_number" value={sheet.bank_account_number} onchange={(e)=>(this.handleChange(e))}/></td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
 					</tr>
 					<tr>
-						<td class="todd">Beleg-Nr.</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd" align="right"><input type="text" size="9" name="document_number" value={sheet.document_number} onchange={(e)=>(this.handleChange(e))}/></td>		<td class="todd">&nbsp;</td>
-						<td class="todd">&nbsp;</td>
+						<td>Beleg-Nr.</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right"><input type="text" size="9" name="document_number" value={sheet.document_number} onchange={(e)=>(this.handleChange(e))}/></td>		<td>&nbsp;</td>
+						<td>&nbsp;</td>
 					</tr>
 					<tr>
-						<td class="teven">Verbucht</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven" align="right"><input type="date" size="9" name="booked_date" value={sheet.booked_date} onchange={(e)=>(this.handleChange(e))}/></td>
-						<td class="teven">&nbsp;</td>
-						<td class="teven">&nbsp;</td>
+						<td>Verbucht</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right"><DatePicker id="booked_date" value={sheet.booked_date} callback={this.handleDateChange} callbackOrigin={this}/></td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
 					</tr>
 					<tr>
-						<td class="todd">Bezahlt</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd">&nbsp;</td>
-						<td class="todd" align="right"><input type="date" size="9" name="paid_date" value={sheet.paid_date}  onchange={(e)=>(this.handleChange(e))}/></td>		<td class="todd">&nbsp;</td>
-						<td class="todd">&nbsp;</td>
+						<td>Bezahlt</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right"><DatePicker id="paid_date" value={sheet.paid_date} callback={this.handleDateChange} callbackOrigin={this}/></td>		<td>&nbsp;</td>
+						<td>&nbsp;</td>
 					</tr>
 
 					<tr>
