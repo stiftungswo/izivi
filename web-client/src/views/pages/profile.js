@@ -355,7 +355,7 @@ export default class User extends Component {
                                 <div class="row">
                                     <div class="col-xs-2">Von</div>
                                     <div class="col-xs-2">Bis</div>
-                                    <div class="col-xs-1">Angerechnete Tage</div>
+                                    <div class="col-xs-2">Angerechnete Tage</div>
                                     {ApiService.isAdmin()
                                         ?  <div class="col-xs-1">Erledigt</div>
                                         : null
@@ -376,7 +376,7 @@ export default class User extends Component {
                                             <div
                                                 class="col-xs-2">{ moment(obj.end, 'YYYY-MM-DD').format('DD.MM.YYYY') }</div>
                                             <div
-                                                class="col-xs-1">{ obj.days }</div>
+                                                class="col-xs-2">{ obj.days }</div>
                                             {ApiService.isAdmin()
                                                 ? obj.done === 1
                                                     ? <div class="col-xs-1">&#9989;</div>
