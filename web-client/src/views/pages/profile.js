@@ -356,7 +356,7 @@ export default class User extends Component {
                                 <tr>
                                     <th>Von</th>
                                     <th>Bis</th>
-                                    <th>Tage</th>
+                                    <th>Angerechnete Tage</th>
                                     {ApiService.isAdmin()
                                         ? <th>Erledigt</th>
                                         : null
