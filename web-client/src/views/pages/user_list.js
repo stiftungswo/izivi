@@ -80,9 +80,7 @@ export default class UserList extends Component {
             Toast.showSuccess('Löschen erfolgreich', 'Benutzer wurde erfolgreich gelöscht')
             this.getUsers();
         }).catch((error) => {
-            Toast.showError('Löschen fehlgeschlagen', 'Benutzer konnte nicht gelöscht werden')
-            //TODO ERROR Handling!!!
-            //this.setState({error: error});
+            Toast.showError('Löschen fehlgeschlagen', 'Benutzer konnte nicht gelöscht werden', error, this.context)
         });
     }
 
@@ -140,22 +138,22 @@ export default class UserList extends Component {
                                 </tr>
                                 <tr>
                                     <td className="hidden-xs">
-                                        <input class="SWOInput" name="zdp" size="5" type="text" value={ this.state.zdp } oninput={ this.handleChange.bind(this) }/>
+                                        <input class="form-control" name="zdp" size="5" type="text" value={ this.state.zdp } oninput={ this.handleChange.bind(this) }/>
                                     </td>
                                     <td>
-                                        <input class="SWOInput" name="name" size="15" type="text" value={ this.state.name } oninput={ this.handleChange.bind(this) }/>
+                                        <input class="form-control" name="name" size="15" type="text" value={ this.state.name } oninput={ this.handleChange.bind(this) }/>
                                     </td>
                                     <td>
-                                        <DatePicker class="SWOInput" id="start" value={ this.state.start } callback={this.handleDateChange} callbackOrigin={this} />
+                                        <DatePicker id="start" value={ this.state.start } callback={this.handleDateChange} callbackOrigin={this} showLabel={false} />
                                     </td>
                                     <td>
-                                        <DatePicker class="SWOInput" id="end" value={ this.state.end } callback={this.handleDateChange} callbackOrigin={this} />
+                                        <DatePicker id="end" value={ this.state.end } callback={this.handleDateChange} callbackOrigin={this} showLabel={false} />
                                     </td>
                                     <td className="hidden-xs">
-                                        <input class="SWOInput" name="active" type="checkbox" value={ this.state.active } onchange={ this.handleChange.bind(this) }/>
+                                        <input class="form-control" name="active" type="checkbox" value={ this.state.active } onchange={ this.handleChange.bind(this) }/>
                                     </td>
                                     <td className="hidden-xs">
-                                        <select name="group" value={ this.state.group } oninput={ this.handleChange.bind(this) }>
+                                        <select className="form-control" name="group" value={ this.state.group } oninput={ this.handleChange.bind(this) }>
                                             <option value="0">(Alle Gruppen)</option>
                                             <option value="1">Admins</option>
                                             <option value="2">Mitarbeiter</option>

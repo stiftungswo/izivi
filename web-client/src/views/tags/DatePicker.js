@@ -32,6 +32,11 @@ export default class DatePicker extends InputField {
             dateValue = DatePicker.dateFormat_EN2CH(this.props.value);
         }
 
+        let showLabel = true;
+        if(this.props.showLabel !== undefined && this.props.showLabel !== '') {
+            showLabel = this.props.showLabel;
+        }
+
         return this.getFormGroup (
             <div class="input-group input-append date datePicker" id="datePicker">
                 <input
@@ -46,7 +51,7 @@ export default class DatePicker extends InputField {
                     <span class="glyphicon glyphicon-calendar"></span>
                 </span>
             </div>
-        )
+        , null, showLabel ? 9 : 12, showLabel)
     }
 }
 
