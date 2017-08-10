@@ -91,7 +91,7 @@ export default class User extends Component {
         this.setState({loading: true, error: null});
 
         axios.get(
-            ApiService.BASE_URL+'specification',
+            ApiService.BASE_URL+'specification/me',
             { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
         ).then((response) => {
             this.setState({
