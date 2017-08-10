@@ -128,7 +128,7 @@ export default class Missions extends Component {
                 if(ApiService.isAdmin()){
                     deleteButton.push(<button class="btn btn-xs" onClick={()=>{if(confirm('Möchten Sie diesen Einsatz wirklich löschen?')){ self.missionTag.deleteMission(self, curMission) }}}>löschen</button>);
                 }
-                missions.push(<tr><td>{name}</td><td>{moment(m[i].start, 'YYYY-MM-DD').format('DD.MM.YYYY')}</td><td>{moment(m[i].end, 'YYYY-MM-DD').format('DD.MM.YYYY')}</td><td><button class="btn btn-xs" data-toggle="modal" data-target={'#einsatzModal'+m[i].id}>bearbeiten</button></td><td><button class="btn btn-xs" onClick={()=>{this.getMissionDraft(self, curMission.id)}}>drucken</button></td><td>{deleteButton}</td></tr>)
+                missions.push(<div class="row"><div class="col-xs-3">{name}</div><div class="col-xs-2">{moment(m[i].start, 'YYYY-MM-DD').format('DD.MM.YYYY')}</div><div class="col-xs-2">{moment(m[i].end, 'YYYY-MM-DD').format('DD.MM.YYYY')}</div><div class="col-xs-1"><button class="btn btn-xs" data-toggle="modal" data-target={'#einsatzModal'+m[i].id}>bearbeiten</button></div><div class="col-xs-1"><button class="btn btn-xs" onClick={()=>{this.getMissionDraft(self, curMission.id)}}>drucken</button></div><div class="col-xs-1">{deleteButton}</div></div>)
                 missions.push(this.renderMissions(self, m[i], ApiService.isAdmin()))
             }
         }

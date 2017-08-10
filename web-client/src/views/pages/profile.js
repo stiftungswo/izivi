@@ -79,7 +79,7 @@ export default class User extends Component {
             this.setState(newState);
 
             for(var i=0; i<response.data.missions.length; i++){
-               this.missionTag.getMissionDays(this, response.data.missions[i].id);
+                this.missionTag.getMissionDays(this, response.data.missions[i].id);
             }
 
         }).catch((error) => {
@@ -198,7 +198,7 @@ export default class User extends Component {
                 responseType: 'blob'
             }
         ).then((response) => {
-        	this.setState({loading: false})
+            this.setState({loading: false})
             let blob = new Blob([response.data], { type: 'application/pdf' } )
             window.location = window.URL.createObjectURL(blob)
         }).catch((error) => {
@@ -225,176 +225,186 @@ export default class User extends Component {
         var missions = this.missionTag.getMissions(this);
 
         return (
-			<Header>
+            <Header>
                 <div className="page page__user_list">
                     <Card>
                         <h1>Profil</h1>
                         <div class="container">
 
-                        <form class="form-horizontal" action="javascript:;" onSubmit={()=>{this.save()}}>
+                            <form class="form-horizontal" action="javascript:;" onSubmit={()=>{this.save()}}>
+                                <hr />
+                                { this.getPasswordChangeButton() }
+                                <input name="id" value="00000" type="hidden"/>
+                                <input name="action" value="saveEmployee" type="hidden"/>
+
+                                <h3>Persönliche Informationen</h3>
+                                <InputField id="zdp" label="ZDP" value={result.zdp} disabled="true"/>
+                                <InputField id="first_name" label="Vorname" value={result.first_name} self={this} />
+                                <InputField id="last_name" label="Nachname" value={result.last_name} self={this} />
+
+                                <InputField id="address" label="Strasse" value={result.address} self={this} />
+                                <InputField id="city" label="Ort" value={result.city} self={this} />
+                                <InputField id="zip" label="PLZ" value={result.zip} self={this} />
+
+                                <DatePicker id="birthday" label="Geburtstag" value={result.birthday} callback={this.handleDateChange} callbackOrigin={this} />
+
+                                <InputField id="hometown" label="Heimatort" value={result.hometown} self={this} />
+
+                                <InputField inputType="email" id="email" label="E-Mail" value={result.email} self={this} />
+                                <InputField inputType="tel" id="phone_mobile" label="Tel. Mobil" value={result.phone_mobile} self={this} />
+                                <InputField inputType="tel" id="phone_private" label="Tel. Privat" value={result.phone_private} self={this} />
+                                <InputField inputType="tel" id="phone_business" label="Tel. Geschäft" value={result.phone_business} self={this} />
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="canton">Kanton</label>
+                                    <div class="col-sm-9">
+                                        <select id="canton" name="canton" class="form-control" onChange={(e)=>this.handleSelectChange(e)}>
+                                            { this.cantonTag.renderCantons(this.state) }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <hr />
+                                <h3>Bank-/Postverbindung</h3>
+
+                                <div class="form-group" id="ibanFormGroup">
+                                    <label class="control-label col-sm-3" for="hometown">IBAN-Nr.</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="bank_iban" name="bank_iban" value={result.bank_iban}
+                                               className="form-control" onChange={(e)=>this.handleIBANChange(e)} />
+                                    </div>
+                                    <div id="_helpiban" className="col-sm-1 hidden-xs">
+                                        <a href="#" data-toggle="popover" title="IBAN-Nr" data-content={howerText_IBAN}>
+                                            <span style="font-size:2em;" className="glyphicon glyphicon-question-sign" aria-hidden="true"/>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <hr />
+                                <h3>Krankenkasse</h3>
+                                <div class="form-group" id="healthInsuranceFormGroup">
+                                    <label class="control-label col-sm-3" for="health_insurance">Krankenkasse (Name und Ort)</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="health_insurance" name="health_insurance" value={result.health_insurance}
+                                               className="form-control" onChange={(e)=>this.handleIBANChange(e)} />
+                                    </div>
+                                    <div id="_helpiban" className="col-sm-1 hidden-xs">
+                                        <a href="#" data-toggle="popover" title="Krankenkasse" data-content={howerText_health_insurance}>
+                                            <span style="font-size:2em;" className="glyphicon glyphicon-question-sign" aria-hidden="true"/>
+                                        </a>
+                                    </div>
+                                </div>
+                                <hr />
+
+                                <h3>Diverse Informationen</h3>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="berufserfahrung">Berufserfahrung</label>
+                                    <div class="col-sm-8">
+                                        <textarea rows="4" id="work_experience" name="work_experience" class="form-control" onChange={(e)=>this.handleTextareaChange(e)}>{result.work_experience}</textarea>
+                                    </div>
+                                    <div id="_helpberufserfahrung" className="col-sm-1 hidden-xs">
+                                        <a href="#" data-toggle="popover" title="Berufserfahrung" data-content={howerText_Berufserfahrung}>
+                                            <span style="font-size:2em;" className="glyphicon glyphicon-question-sign" aria-hidden="true"/>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="hometown">Regionalzentrum</label>
+                                    <div class="col-sm-9">
+                                        <select id="regional_center" name="regional_center" class="form-control" onChange={(e)=>this.handleSelectChange(e)}>
+                                            { this.regionalCenterTag.renderRegionalCenters(this.state) }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <InputCheckbox id="driving_licence" value={result.driving_licence} label="Führerausweis" self={this} />
+                                <InputCheckbox id="ga_travelcard" value={result.ga_travelcard} label="GA" self={this} />
+                                <InputCheckbox id="half_fare_travelcard" value={result.half_fare_travelcard} label="Halbtax" self={this} />
+                                <InputField id="other_fare_network" label="Andere Abos" value={result.other_fare_network} self={this} />
+
+                                {ApiService.isAdmin()
+                                    ? this.adminFields.getAdminRestrictedFields(this, result)
+                                    : null }
+
+                                <button type="submit" class="btn btn-primary">Absenden</button>
+                            </form>
+
                             <hr />
-                            { this.getPasswordChangeButton() }
-                            <input name="id" value="00000" type="hidden"/>
-                            <input name="action" value="saveEmployee" type="hidden"/>
-
-                            <h3>Persönliche Informationen</h3>
-                            <InputField id="zdp" label="ZDP" value={result.zdp} disabled="true"/>
-                            <InputField id="first_name" label="Vorname" value={result.first_name} self={this} />
-                            <InputField id="last_name" label="Nachname" value={result.last_name} self={this} />
-
-                            <InputField id="address" label="Strasse" value={result.address} self={this} />
-                            <InputField id="city" label="Ort" value={result.city} self={this} />
-                            <InputField id="zip" label="PLZ" value={result.zip} self={this} />
-
-                            <DatePicker id="birthday" label="Geburtstag" value={result.birthday} callback={this.handleDateChange} callbackOrigin={this} />
-
-                            <InputField id="hometown" label="Heimatort" value={result.hometown} self={this} />
-
-                            <InputField inputType="email" id="email" label="E-Mail" value={result.email} self={this} />
-                            <InputField inputType="tel" id="phone_mobile" label="Tel. Mobil" value={result.phone_mobile} self={this} />
-                            <InputField inputType="tel" id="phone_private" label="Tel. Privat" value={result.phone_private} self={this} />
-                            <InputField inputType="tel" id="phone_business" label="Tel. Geschäft" value={result.phone_business} self={this} />
-
-                            <div class="form-group">
-                                <label class="control-label col-sm-3" for="canton">Kanton</label>
-                                <div class="col-sm-9">
-                                    <select id="canton" name="canton" class="form-control" onChange={(e)=>this.handleSelectChange(e)}>
-                                        { this.cantonTag.renderCantons(this.state) }
-                                    </select>
+                            <h3>Zivieinsätze</h3>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-xs-3">Pflichtenheft</div>
+                                    <div class="col-xs-2">Start</div>
+                                    <div class="col-xs-2">Ende</div>
+                                    <div class="col-xs-1"></div>
+                                    <div class="col-xs-1"></div>
+                                    <div class="col-xs-1"></div>
                                 </div>
                             </div>
-
-                            <hr />
-                            <h3>Bank-/Postverbindung</h3>
-
-                            <div class="form-group" id="ibanFormGroup">
-                                <label class="control-label col-sm-3" for="hometown">IBAN-Nr.</label>
-                                <div class="col-sm-8">
-                                    <input type="text" id="bank_iban" name="bank_iban" value={result.bank_iban}
-                                           className="form-control" onChange={(e)=>this.handleIBANChange(e)} />
-                                </div>
-                                <div id="_helpiban" className="col-sm-1 hidden-xs">
-                                    <a href="#" data-toggle="popover" title="IBAN-Nr" data-content={howerText_IBAN}>
-                                        <span style="font-size:2em;" className="glyphicon glyphicon-question-sign" aria-hidden="true"/>
-                                    </a>
-                                </div>
+                            <div class="container">
+                                {missions}
                             </div>
 
-                            <hr />
-                            <h3>Krankenkasse</h3>
-                            <div class="form-group" id="healthInsuranceFormGroup">
-                                <label class="control-label col-sm-3" for="health_insurance">Krankenkasse (Name und Ort)</label>
-                                <div class="col-sm-8">
-                                    <input type="text" id="health_insurance" name="health_insurance" value={result.health_insurance}
-                                           className="form-control" onChange={(e)=>this.handleIBANChange(e)} />
-                                </div>
-                                <div id="_helpiban" className="col-sm-1 hidden-xs">
-                                    <a href="#" data-toggle="popover" title="Krankenkasse" data-content={howerText_health_insurance}>
-                                        <span style="font-size:2em;" className="glyphicon glyphicon-question-sign" aria-hidden="true"/>
-                                    </a>
-                                </div>
-                            </div>
-                            <hr />
-
-                            <h3>Diverse Informationen</h3>
-                             <div class="form-group">
-                                 <label class="control-label col-sm-3" for="berufserfahrung">Berufserfahrung</label>
-                                 <div class="col-sm-8">
-                                     <textarea rows="4" id="work_experience" name="work_experience" class="form-control" onChange={(e)=>this.handleTextareaChange(e)}>{result.work_experience}</textarea>
-                                 </div>
-                                 <div id="_helpberufserfahrung" className="col-sm-1 hidden-xs">
-                                     <a href="#" data-toggle="popover" title="Berufserfahrung" data-content={howerText_Berufserfahrung}>
-                                         <span style="font-size:2em;" className="glyphicon glyphicon-question-sign" aria-hidden="true"/>
-                                     </a>
-                                 </div>
-                             </div>
-
-                             <div class="form-group">
-                                 <label class="control-label col-sm-3" for="hometown">Regionalzentrum</label>
-                                 <div class="col-sm-9">
-                                     <select id="regional_center" name="regional_center" class="form-control" onChange={(e)=>this.handleSelectChange(e)}>
-                                         { this.regionalCenterTag.renderRegionalCenters(this.state) }
-                                     </select>
-                                 </div>
-                             </div>
-
-                             <InputCheckbox id="driving_licence" value={result.driving_licence} label="Führerausweis" self={this} />
-                             <InputCheckbox id="ga_travelcard" value={result.ga_travelcard} label="GA" self={this} />
-							 <InputCheckbox id="half_fare_travelcard" value={result.half_fare_travelcard} label="Halbtax" self={this} />
-							 <InputField id="other_fare_network" label="Andere Abos" value={result.other_fare_network} self={this} />
-
-                            {ApiService.isAdmin()
-                            ? this.adminFields.getAdminRestrictedFields(this, result)
-                            : null }
-
-                            <button type="submit" class="btn btn-primary">Absenden</button>
-                        </form>
-
-                        <hr />
-                        <h3>Zivieinsätze</h3>
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Pflichtenheft</th>
-                                    <th>Start</th>
-                                    <th>Ende</th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {missions}
-                            </tbody>
-                        </table>
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#einsatzModal">Neue Einsatzplanung hinzufügen</button>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#einsatzModal">Neue Einsatzplanung hinzufügen</button>
                             { this.missionTag.renderMissions(this, null, ApiService.isAdmin()) }
 
-                        <hr />
-                        <h3>Meldeblätter</h3>
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Von</th>
-                                    <th>Bis</th>
-                                    <th>Angerechnete Tage</th>
+                            <hr />
+                            <h3>Meldeblätter</h3>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-xs-2">Von</div>
+                                    <div class="col-xs-2">Bis</div>
+                                    <div class="col-xs-2">Angerechnete Tage</div>
                                     {ApiService.isAdmin()
-                                        ? <th>Erledigt</th>
+                                        ?  <div class="col-xs-1">Erledigt</div>
                                         : null
                                     }
-                                    <th></th>
+                                    <div class="col-xs-2"></div>
                                     {ApiService.isAdmin()
-                                        ? <th></th>
+                                        ?  <div class="col-xs-2"></div>
                                         : null
                                     }
-                                </tr>
-                            </thead>
-                            <tbody>
-                                { this.state.reportSheets.length
+                                </div>
+                            </div>
+                            <div class="container">
+                                {this.state.reportSheets.length
                                     ? this.state.reportSheets.map(obj =>
-                                        <tr>
-                                            <td>{ moment(obj.start, 'YYYY-MM-DD').format('DD.MM.YYYY') }</td>
-                                            <td>{ moment(obj.end, 'YYYY-MM-DD').format('DD.MM.YYYY') }</td>
-                                            <td>{ obj.days }</td>
+                                        <div class="row">
+                                            <div
+                                                class="col-xs-2">{ moment(obj.start, 'YYYY-MM-DD').format('DD.MM.YYYY') }</div>
+                                            <div
+                                                class="col-xs-2">{ moment(obj.end, 'YYYY-MM-DD').format('DD.MM.YYYY') }</div>
+                                            <div
+                                                class="col-xs-2">{ obj.days }</div>
                                             {ApiService.isAdmin()
                                                 ? obj.done === 1
-                                                    ? <td>&#9989;</td>
-                                                    : <td></td>
+                                                    ? <div class="col-xs-1">&#9989;</div>
+                                                    : <div class="col-xs-1"></div>
                                                 : null
                                             }
-                                            <td><button name="showReportSheet" class="btn btn-xs" onClick={ () => this.showReportSheet(obj.id) }>Spesenrapport anzeigen</button></td>
-                                            {ApiService.isAdmin() ? <td><button name="editReportSheet" class="btn btn-xs" onClick={ () => this.router.push('/expense/' + obj.id) }>Spesen bearbeiten</button></td> : null }
-                                        </tr>
+                                            <div class="col-xs-2">
+                                                <button name="showReportSheet" class="btn btn-xs"
+                                                        onClick={() => this.showReportSheet(obj.id)}>Spesenrapport
+                                                    anzeigen
+                                                </button>
+                                            </div>
+                                            {ApiService.isAdmin() ? <div class="col-xs-2">
+                                                <button name="editReportSheet" class="btn btn-xs"
+                                                        onClick={() => this.router.push('/expense/' + obj.id)}>Spesen
+                                                    bearbeiten
+                                                </button>
+                                            </div> : null}
+                                        </div>
                                     )
                                     : null
                                 }
-                            </tbody>
-                        </table>
-
+                            </div>
                         </div>
                     </Card>
-                <LoadingView loading={this.state.loading} error={this.state.error}/>
-            </div>
-        </Header>
+                    <LoadingView loading={this.state.loading} error={this.state.error}/>
+                </div>
+            </Header>
         );
     }
 
