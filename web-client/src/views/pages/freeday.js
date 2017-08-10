@@ -19,9 +19,11 @@ export default class Freeday extends Component {
         };
     }
 
-    componentDidMount()
-    {
+    componentDidMount() {
         this.getFreedays()
+    }
+
+    componentDidUpdate() {
         DatePicker.initializeDatePicker();
     }
 
@@ -46,7 +48,13 @@ export default class Freeday extends Component {
         this.setState(this.state);
     }
 
-    handleDateChange(e, origin) {
+    handleChangeNew(e) {
+        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+        this.state['newFreeday'][e.target.name] = value;
+        this.setState(this.state);
+    }
+
+    handleNewDateChange(e, origin) {
         let value = e.target.value;
 
         if(value === undefined || value == null || value == "") {
@@ -57,6 +65,20 @@ export default class Freeday extends Component {
         }
 
         origin.state['newFreeday'][e.target.name] = value;
+        origin.setState(this.state);
+    }
+
+    handleDateChange(e, origin, index) {
+        let value = e.target.value;
+
+        if(value === undefined || value == null || value == "") {
+            value = origin.state.lastDateValue;
+        }
+        else {
+            value = DatePicker.dateFormat_CH2EN(value);
+        }
+
+        origin.state['freedays'][index][e.target.name] = value;
         origin.setState(this.state);
     }
 
@@ -72,8 +94,6 @@ export default class Freeday extends Component {
         }).catch((error) => {
             Toast.showError('Speichern fehlgeschlagen', 'Frei-Tag konnte nicht gespeicher werden')
             this.setState({loading: false});
-            //TODO ERROR Handling!!!
-            //this.setState({error: error});
         });
     }
 
@@ -88,18 +108,8 @@ export default class Freeday extends Component {
         }).catch((error) => {
             Toast.showError('Löschen fehlgeschlagen', 'Frei-Tag konnte nicht gelöscht werden')
             this.setState({loading: false});
-            //TODO ERROR Handling!!!
-            //this.setState({error: error});
         });
 	}
-
-
-    handleChangeNew(e) {
-        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-        this.state['newFreeday'][e.target.name] = value;
-        this.setState(this.state);
-    }
-
 
     add(){
         this.setState({loading:true, error:null});
@@ -114,8 +124,6 @@ export default class Freeday extends Component {
         }).catch((error) => {
             Toast.showError('Hinzufügen fehlgeschlagen', 'Frei-Tag konnte nicht hinzugefügt werden')
             this.setState({loading: false});
-            //TODO ERROR Handling!!!
-            //this.setState({error: error});
         });
     }
 
@@ -124,8 +132,8 @@ export default class Freeday extends Component {
 
         tbody.push(
 			<tr>
-                <td><DatePicker id="date_from" value={ this.state.newFreeday.date_from } callback={this.handleDateChange} callbackOrigin={this} /></td>
-                <td><DatePicker id="date_to" value={ this.state.newFreeday.date_to } callback={this.handleDateChange} callbackOrigin={this} /></td>
+                <td><DatePicker id="date_from" value={ this.state.newFreeday.date_from } callback={this.handleNewDateChange} callbackOrigin={this} /></td>
+                <td><DatePicker id="date_to" value={ this.state.newFreeday.date_to } callback={this.handleNewDateChange} callbackOrigin={this} /></td>
 				<td><select class="form-control" name="holiday_type" value={this.state.newFreeday.holiday_type} onChange={(e)=>this.handleChangeNew(e)}>
 					<option value="2">Feiertag</option>
 					<option value="1">Betriebsferien</option>
@@ -139,8 +147,8 @@ export default class Freeday extends Component {
         for(let i=0;i<freedays.length;i++) {
             tbody.push(
             	<tr>
-					<td><DatePicker id="date_from" value={ freedays[i].date_from } callback={this.handleDateChange} callbackOrigin={this} /></td>
-					<td><DatePicker id="date_to" value={ freedays[i].date_to } callback={this.handleDateChange} callbackOrigin={this} /></td>
+					<td><DatePicker id="date_from" value={ this.state.freedays[i].date_from } callback={(e,origin)=>this.handleDateChange(e, origin, i)} callbackOrigin={this} /></td>
+					<td><DatePicker id="date_to" value={ this.state.freedays[i].date_to } callback={(e,origin)=>this.handleDateChange(e, origin, i)} callbackOrigin={this} /></td>
 					<td><select class="form-control" name="holiday_type" value={''+freedays[i].holiday_type} onChange={(e)=>this.handleChange(e, i)}>
 						<option value="2">Feiertag</option>
 						<option value="1">Betriebsferien</option>
