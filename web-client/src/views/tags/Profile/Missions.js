@@ -8,6 +8,7 @@ import InputField from './InputField';
 import InputFieldWithHelpText from './InputFieldWithHelpText';
 import InputCheckbox from './InputCheckbox';
 import DatePicker from '../DatePicker';
+import Toast from "../../../utils/toast";
 
 export default class Missions extends Component {
 
@@ -104,6 +105,7 @@ export default class Missions extends Component {
             { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
         ).then((response) => {
             self.getUser();
+            self.getReportSheets();
         }).catch((error) => {
             self.setState({error: error});
         });
