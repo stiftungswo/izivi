@@ -374,4 +374,13 @@ class ReportSheet extends Model
         }
     }
 
+    public static function add($mission, $start, $end){
+        $sheet = new ReportSheet();
+        $sheet->mission = $mission->id;
+        $sheet->user = $mission->user;
+        $sheet->start = $start;
+        $sheet->end = $end;
+        $sheet->save();
+    }
+
 }
