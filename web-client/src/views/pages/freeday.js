@@ -154,8 +154,18 @@ export default class Freeday extends Component {
 						<option value="1">Betriebsferien</option>
 					</select></td>
 					<td><input class="form-control" type="text" name="description" value={freedays[i].description} onChange={(e)=>this.handleChange(e, i)}/></td>
-					<td><button type="button" class="btn btn-sm" onClick={()=>this.save(i)}>speichern</button></td>
-					<td><button class="btn btn-sm" onClick={()=>{if(confirm('Möchten Sie '+freedays[i].description+' wirklich löschen?')){ this.remove(i) }}}>löschen</button></td>
+					<td>
+                        {this.state.freedays[i].date_from > new Date().toISOString()
+                            ? <button type="button" class="btn btn-sm" onClick={()=>this.save(i)}>speichern</button>
+                            : null
+                        }
+                    </td>
+					<td>
+                        {this.state.freedays[i].date_from > new Date().toISOString()
+                            ? <button class="btn btn-sm" onClick={()=>{if(confirm('Möchten Sie '+freedays[i].description+' wirklich löschen?')){ this.remove(i) }}}>löschen</button>
+                            : null
+                        }
+                    </td>
 				</tr>
             );
         }
