@@ -5,6 +5,25 @@ import InputField from './InputField';
 
 export default class InputFieldWithProposal extends InputField {
 
+    validateMainField() {
+        if(this.props.doValidation !== undefined && this.props.doValidation == true) {
+
+            let mainValue = $("#" + this.props.id).val();
+            let proposalValue = this.props.proposalValue;
+
+            if (mainValue == proposalValue) {
+                $("#" + this.props.id).parent().removeClass("has-warning");
+            }
+            else {
+                $("#" + this.props.id).parent().addClass("has-warning");
+            }
+        }
+    }
+
+    componentDidMount() {
+        this.validateMainField();
+    }
+
     render() {
 
         let commentField = null;
@@ -33,7 +52,7 @@ export default class InputFieldWithProposal extends InputField {
                 name={ this.props.id }
                 value={ this.props.value }
                 className="form-control"
-                onChange={(e)=>this.props.self.handleChange(e)}
+                onChange={(e)=> { this.validateMainField(); this.props.self.handleChange(e) }}
                 disabled={this.props.disabled}
             />
         )
@@ -50,6 +69,7 @@ export default class InputFieldWithProposal extends InputField {
             <div id={ "_help" + this.props.id } className="col-sm-5">
                 <input
                     type="text"
+                    id={ "prop_" + this.props.id }
                     value={proposalText + this.props.proposalValue}
                     className="form-control"
                     disabled="true"

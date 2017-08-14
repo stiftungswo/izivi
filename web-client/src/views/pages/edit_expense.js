@@ -120,13 +120,11 @@ export default class EditExpense extends Component {
 					<InputField id="einsaetze_eligibleholiday" label="Ferienanspruch für Einsatz" value={sheet.einsaetze_eligibleholiday} disabled="true"/>
 					<InputField id="sum_tage" label="Dauer" value={sheet.sum_tage + " Tage"} disabled="true"/><hr />
 
-
-
 					<InputFieldWithProposal id="meldeblaetter_workdays" valueLabel="Gearbeitet" value={sheet.meldeblaetter_workdays}
-											proposalValue={sheet.meldeblaetter_workdays_proposal} showComment={false} self={this} />
+											proposalValue={sheet.meldeblaetter_workdays_proposal} showComment={false} self={this} doValidation={true} />
 
 					<InputFieldWithProposal id="meldeblaetter_workfreedays" valueLabel="Arbeitsfreie Tage" value={sheet.meldeblaetter_workfreedays}
-											proposalValue={sheet.meldeblaetter_workfreedays_proposal} showComment={true}
+											proposalValue={sheet.meldeblaetter_workfreedays_proposal} showComment={true} doValidation={true}
 											commentId="meldeblaetter_workfree_comment" commentValue={sheet.meldeblaetter_workfree_comment} self={this} />
 
 					<InputFieldWithProposal id="meldeblaetter_companyurlaub" valueLabel="Betriebsferien (Urlaub)" value={sheet.meldeblaetter_companyurlaub}
