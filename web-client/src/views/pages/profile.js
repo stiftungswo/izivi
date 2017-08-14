@@ -123,6 +123,24 @@ export default class User extends Component {
         });
     }
 
+    addReportSheet(missionId){
+        this.setState({loading:true, error:null});
+
+        axios.put(
+            ApiService.BASE_URL+'reportsheet/',
+            {
+                user: this.props.params.userid ? this.props.params.userid : null,
+                mission: missionId,
+            },
+            { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
+        ).then((response) => {
+            Toast.showSuccess('Hinzufügen erfolgreich', 'Meldeblatt hinzugefügt')
+            this.getReportSheets();
+        }).catch((error) => {
+            Toast.showError('Hinzufügen fehlgeschlagen', 'Meldeblatt konnte nicht hinzugefügt werden', error, this.context)
+        });
+    }
+
     handleChange(e) {
         let value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
         this.state['result'][e.target.name] = value;
@@ -214,7 +232,9 @@ export default class User extends Component {
     getPasswordChangeButton() {
         return (
             <div>
-                <button type="button" name="resetPassword" class="btn btn-primary" onClick={(e)=>this.redirectToChangePassword(e)}>Passwort ändern</button>
+                <button type="button" name="resetPassword" class="btn btn-primary" onClick={(e)=>this.redirectToChangePassword(e)}>
+                    <span class="glyphicon glyphicon-wrench" /> Passwort ändern
+                </button>
                 <hr />
             </div>
         )
@@ -332,29 +352,33 @@ export default class User extends Component {
                                     ? this.adminFields.getAdminRestrictedFields(this, result)
                                     : null }
 
-                                <button type="submit" class="btn btn-primary">Absenden</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-floppy-disk" /> Speichern
+                                </button>
                             </form>
-
+                            <br />
                             <hr />
-                            <h3>Zivieinsätze</h3>
+                            <br />
+
+                            <h3>Einsätze</h3>
                             <div class="container">
                                 <div class="row">
-                                    <div class="col-xs-3">Pflichtenheft</div>
+                                    <div class="col-xs-2">Pflichtenheft</div>
                                     <div class="col-xs-2">Start</div>
-                                    <div class="col-xs-2">Ende</div>
-                                    <div class="col-xs-1"></div>
-                                    <div class="col-xs-1"></div>
-                                    <div class="col-xs-1"></div>
+                                    <div class="col-xs-3">Ende</div>
                                 </div>
                             </div>
                             <div class="container">
                                 {missions}
                             </div>
-
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#einsatzModal">Neue Einsatzplanung hinzufügen</button>
+                            <br />
+                            <button class="btn btn-success" data-toggle="modal" data-target="#einsatzModal">Neue Einsatzplanung hinzufügen</button>
                             { this.missionTag.renderMissions(this, null, ApiService.isAdmin()) }
 
+                            <br /><br />
                             <hr />
+                            <br />
+
                             <h3>Meldeblätter</h3>
                             <div class="container">
                                 <div class="row">
@@ -362,45 +386,41 @@ export default class User extends Component {
                                     <div class="col-xs-2">Bis</div>
                                     <div class="col-xs-2">Angerechnete Tage</div>
                                     <div class="col-xs-1">Status</div>
-                                    <div class="col-xs-2"></div>
-                                    {ApiService.isAdmin()
-                                        ?  <div class="col-xs-2"></div>
-                                        : null
-                                    }
                                 </div>
                             </div>
                             <div class="container">
                                 {this.state.reportSheets.length
                                     ? this.state.reportSheets.map(obj =>
+
                                         <div class="row">
-                                            <div
-                                                class="col-xs-2">{ moment(obj.start, 'YYYY-MM-DD').format('DD.MM.YYYY') }</div>
-                                            <div
-                                                class="col-xs-2">{ moment(obj.end, 'YYYY-MM-DD').format('DD.MM.YYYY') }</div>
-                                            <div
-                                                class="col-xs-2">{ obj.days }</div>
+                                            <div class="col-xs-2">{ moment(obj.start, 'YYYY-MM-DD').format('DD.MM.YYYY') }</div>
+                                            <div class="col-xs-2">{ moment(obj.end, 'YYYY-MM-DD').format('DD.MM.YYYY') }</div>
+                                            <div class="col-xs-2">{ obj.days }</div>
                                             {obj.done === 1
                                                 ? <div class="col-xs-1"><span class="glyphicon glyphicon-ok" style="color:green"/></div>
                                                 : <div class="col-xs-1"><span class="glyphicon glyphicon glyphicon-hourglass" style="color:orange"/></div>
                                             }
-                                            <div class="col-xs-2">
+                                            <div class="col-xs-1">
                                                 {obj.done === 1
-                                                    ? <button name="showReportSheet" class="btn btn-xs" onClick={() => this.showReportSheet(obj.id)}>Spesenrapport anzeigen</button>
+                                                    ? <button name="showReportSheet" class="btn btn-xs" onClick={() => this.showReportSheet(obj.id)}>
+                                                        <span class="glyphicon glyphicon-print" aria-hidden="true"></span> Drucken
+                                                    </button>
                                                     : null
                                                 }
                                             </div>
-                                            {ApiService.isAdmin() ? <div class="col-xs-2">
-                                                <button name="editReportSheet" class="btn btn-xs"
-                                                        onClick={() => this.router.push('/expense/' + obj.id)}>Spesen
-                                                    bearbeiten
-                                                </button>
-                                            </div> : null}
+                                            {ApiService.isAdmin() ?
+                                                <div class="col-xs-2">
+                                                    <button name="editReportSheet" class="btn btn-xs btn-warning" onClick={() => this.router.push('/expense/' + obj.id)}>
+                                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Bearbeiten
+                                                    </button>
+                                                </div> : null}
                                         </div>
                                     )
                                     : null
                                 }
                             </div>
                         </div>
+                        <br /><br />
                     </Card>
                     <LoadingView loading={this.state.loading} error={this.state.error}/>
                 </div>

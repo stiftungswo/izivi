@@ -4,9 +4,12 @@ namespace App;
 
 use App\Http\Controllers\PDF\PDF;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ReportSheet extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = ['id',
                            'start',
                            'end',
@@ -102,7 +105,8 @@ class ReportSheet extends Model
     			'specifications.lastday_lunch_expenses AS pflichtenheft_lastday_lunch_expenses',
     			'specifications.lastday_dinner_expenses AS pflichtenheft_lastday_dinner_expenses',
                 'users.first_name AS first_name',
-                'users.last_name AS last_name')
+                'users.last_name AS last_name',
+                'users.id AS user')
             ->first();
 
         $reportSheet['meldeblaetter_tage'] = ReportSheet::countDaysBetween(strtotime($reportSheet['meldeblaetter_start']), strtotime($reportSheet['meldeblaetter_end']));
