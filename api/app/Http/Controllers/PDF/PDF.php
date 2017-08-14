@@ -64,7 +64,7 @@ abstract class PDF
         switch(date("m", $timestamp)) {
             case  1: $month_str = "Jan."; break;
             case  2: $month_str = "Feb."; break;
-            case  3: $month_str = "M&auml;rz"; break;
+            case  3: $month_str = "März"; break;
             case  4: $month_str = "Apr."; break;
             case  5: $month_str = "Mai"; break;
             case  6: $month_str = "Juni"; break;
@@ -84,7 +84,7 @@ abstract class PDF
         switch(date("m", $timestamp)) {
             case  1: $month_str = "Januar"; break;
             case  2: $month_str = "Februar"; break;
-            case  3: $month_str = "M&auml;rz"; break;
+            case  3: $month_str = "März"; break;
             case  4: $month_str = "April"; break;
             case  5: $month_str = "Mai"; break;
             case  6: $month_str = "Juni"; break;
