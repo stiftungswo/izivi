@@ -44,7 +44,12 @@ export default class User extends Component {
         this.regionalCenterTag.getRegionalCenters(this);
         this.getSpecifications();
         this.getReportSheets();
+    }
+
+    componentDidUpdate()
+    {
         DatePicker.initializeDatePicker();
+        this.validateIBAN($("#bank_iban").val());
     }
 
     componentWillReceiveProps(nextProps) {
@@ -403,7 +408,4 @@ export default class User extends Component {
         );
     }
 
-    componentDidUpdate() {
-        this.validateIBAN($("#bank_iban").val());
-    }
 }
