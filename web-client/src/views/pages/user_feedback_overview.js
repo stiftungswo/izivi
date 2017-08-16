@@ -77,6 +77,7 @@ export default class UserFeedbackOverview extends Component {
                         <h3>
                             SWO als Einsatzbetrieb
                         </h3>
+                        ------------------------------------------------------------------------------------------------
                     </div>)
             }
             if(x==11){
@@ -85,6 +86,7 @@ export default class UserFeedbackOverview extends Component {
                         <h3>
                             Arbeit
                         </h3>
+                        ------------------------------------------------------------------------------------------------
                     </div>)
             }
             if(x==27){
@@ -93,6 +95,7 @@ export default class UserFeedbackOverview extends Component {
                         <h3>
                             Einsatzleitung
                         </h3>
+                        ------------------------------------------------------------------------------------------------
                     </div>)
             }
             if(x==36){
@@ -101,6 +104,7 @@ export default class UserFeedbackOverview extends Component {
                         <h3>
                             Bewertung der Einsatzleiter
                         </h3>
+                        ------------------------------------------------------------------------------------------------
                     </div>)
             }
             if(x==66){
@@ -109,6 +113,7 @@ export default class UserFeedbackOverview extends Component {
                         <h3>
                             Weiteres
                         </h3>
+                        ------------------------------------------------------------------------------------------------
                     </div>)
             }   
             //console.log("questions[", x, "] = ", questions[x])
