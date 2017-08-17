@@ -73,6 +73,7 @@ export default class UserList extends Component {
     }
 
     deleteUser(user){
+        this.setState({loading: true, error: null});
         axios.delete(
             ApiService.BASE_URL+'user/'+user.id,
             { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
@@ -80,6 +81,7 @@ export default class UserList extends Component {
             Toast.showSuccess('Löschen erfolgreich', 'Benutzer wurde erfolgreich gelöscht')
             this.getUsers();
         }).catch((error) => {
+            this.setState({loading:false, error:null});
             Toast.showError('Löschen fehlgeschlagen', 'Benutzer konnte nicht gelöscht werden', error, this.context)
         });
     }

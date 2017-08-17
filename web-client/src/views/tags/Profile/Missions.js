@@ -176,7 +176,7 @@ export default class Missions extends Component {
         self.setState({loading:true, error:null});
         if(missionKey=="newmission"){
             axios.put(
-                ApiService.BASE_URL+'mission/',
+                ApiService.BASE_URL+'mission',
                 newMission,
                 { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
             ).then((response) => {
@@ -184,6 +184,7 @@ export default class Missions extends Component {
                 $("[data-dismiss=modal]").trigger({ type: "click" });
                 self.getUser();
             }).catch((error) => {
+                self.setState({loading:false, error:null});
                 Toast.showError('Speichern fehlgeschlagen', 'Neuer Einsatz konnte nicht gespeichert werden', error, self.context)
             });
         }else{
@@ -196,6 +197,7 @@ export default class Missions extends Component {
                 $("[data-dismiss=modal]").trigger({ type: "click" });
                 self.getUser();
             }).catch((error) => {
+                self.setState({loading:false, error:null});
                 Toast.showError('Speichern fehlgeschlagen', 'Einsatz konnte nicht gespeichert werden', error, self.context)
             });
         }
@@ -210,8 +212,10 @@ export default class Missions extends Component {
         ).then((response) => {
             Toast.showSuccess('Löschen erfolgreich', 'Einsatz konnte gelöscht werden')
             self.getUser();
+            self.getReportSheets();
         }).catch((error) => {
             Toast.showError('Löschen fehlgeschlagen', 'Einsatz konnte nicht gelöscht werden', error, self.context)
+            self.setState({loading:false, error:null});
         });
 
     }

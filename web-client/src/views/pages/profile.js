@@ -137,6 +137,7 @@ export default class User extends Component {
             Toast.showSuccess('Hinzufügen erfolgreich', 'Meldeblatt hinzugefügt')
             this.getReportSheets();
         }).catch((error) => {
+            this.setState({loading: false});
             Toast.showError('Hinzufügen fehlgeschlagen', 'Meldeblatt konnte nicht hinzugefügt werden', error, this.context)
         });
     }
