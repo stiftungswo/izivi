@@ -47,7 +47,7 @@ class FeedbackController extends Controller
     private function getFeedbacksTypeRange($questionId) {
         $results = array();
 
-        for($i = 0; $i <= 5; $i++) {
+        for($i = 1; $i <= 6; $i++) {
             $results[$i] = DB::table('user_feedback')->where('answer', '=', $i)->where('questionId', '=', $questionId)->get()->count();
         }
 
