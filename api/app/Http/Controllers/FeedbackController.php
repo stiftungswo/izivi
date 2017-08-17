@@ -48,14 +48,14 @@ class FeedbackController extends Controller
         $results = array();
 
         for($i = 1; $i <= 6; $i++) {
-            $results[$i] = DB::table('user_feedback')->where('answer', '=', $i)->where('questionId', '=', $questionId)->get()->count();
+            $results[$i] = DB::table('user_feedbacks')->where('answer', '=', $i)->where('questionId', '=', $questionId)->get()->count();
         }
 
         return $results;
     }
 
     private function getFeedbacksTypeText($questionId) {
-        $results = DB::table('user_feedback')->select('answer')->where('questionId', '=', $questionId)->get();
+        $results = DB::table('user_feedbacks')->select('answer')->where('questionId', '=', $questionId)->get();
 
         $answerTexts = "";
         foreach($results as $key => $value) {
