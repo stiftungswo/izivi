@@ -46,6 +46,10 @@ export default class UserFeedbackOverview extends Component {
         var feedbacks = [];
         var answers = this.state.feedbacks;
 
+        if(answers[0]){
+            var totalFeedbacks = answers[0]['answers']['1'] + answers[0]['answers']['2'] + answers[0]['answers']['3'] + answers[0]['answers']['4'] + answers[0]['answers']['5'] + answers[0]['answers']['6'];
+        }
+
         for(var x=0; x<answers.length; x++){
             var answerOne = 0;
             var answerTwo = 0;
@@ -247,7 +251,6 @@ export default class UserFeedbackOverview extends Component {
                         <div class="col-xs-2">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <label>{answers[x]['answers']['1']}</label>
                                     <div class="progress vertical progress-striped progress-bar-danger"
                                          style="height: 50px; width: 20px;">
                                         <div class="progress-bar"
@@ -257,7 +260,6 @@ export default class UserFeedbackOverview extends Component {
                                 <div class="col-xs-3"></div>
                                 <div class="col-xs-3"></div>
                                 <div class="col-xs-3">
-                                    <label>{answers[x]['answers']['2']}</label>
                                     <div class="progress vertical progress-striped progress-bar-warning"
                                          style="height: 50px; width: 20px;">
                                         <div class="progress-bar"
@@ -283,25 +285,21 @@ export default class UserFeedbackOverview extends Component {
                         <div class="col-xs-2">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <label>{answers[x]['answers']['1']}</label>
                                     <div class="progress vertical progress-striped progress-bar-danger" style="height: 50px; width: 20px;">
                                         <div class="progress-bar" style={"height: "+(100-(answerOnePerc*100))+"%; width: 100%;  background-color: white; color: black;"}>{(answerOnePerc * 100)}</div>
                                     </div>
                                 </div>
                                 <div class="col-xs-3">
-                                    <label>{answers[x]['answers']['2']}</label>
                                     <div class="progress vertical progress-striped progress-bar-warning" style="height: 50px; width: 20px;">
                                         <div class="progress-bar" style={"height: "+(100-(answerTwoPerc*100))+"%; width: 100%;  background-color: white; color: black;"}>{(answerTwoPerc * 100)}</div>
                                     </div>
                                 </div>
                                 <div class="col-xs-3">
-                                    <label>{answers[x]['answers']['3']}</label>
                                     <div class="progress vertical progress-striped progress-bar-info" style="height: 50px; width: 20px;">
                                         <div class="progress-bar" style={"height: "+(100-(answerThreePerc*100))+"%; width: 100%;  background-color: white; color: black;"}>{(answerThreePerc * 100)}</div>
                                     </div>
                                 </div>
                                 <div class="col-xs-3">
-                                    <label>{answers[x]['answers']['4']}</label>
                                     <div class="progress vertical progress-striped progress-bar-success" style="height: 50px; width: 20px;">
                                         <div class="progress-bar" style={"height: "+(100-(answerFourPerc*100))+"%; width: 100%;  background-color: white; color: black;"}>{(answerFourPerc * 100)}</div>
                                     </div>
@@ -332,6 +330,15 @@ export default class UserFeedbackOverview extends Component {
             <Header>
                 <div className="page page__user_feedback_overview">
                     <Card>
+                        <div class="container" style="background-color: #ebebeb;">
+                            <div class="row">
+                                <div class="col-xs-12" style="background-color: #ffffff;">
+                                    <h4>
+                                        Anzahl Feedbacks in diesem Jahr: {totalFeedbacks}
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
                         <div class="container" style="background-color: #ebebeb;">
                         {feedbacks}
                         </div>
