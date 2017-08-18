@@ -19,11 +19,12 @@ class Mission extends Model
                            'role',
                            'first_time', 
                            'long_mission',
-                           'probation_period'
+                           'probation_period',
+                           'feedback_mail_sent'
                         ];
 
-    public function user(){
-        return $this->belongsTo('App\User');
+    public function usermodel(){
+        return $this->belongsTo('App\User', 'user');
     }
 
 }
