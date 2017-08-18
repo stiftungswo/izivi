@@ -132,7 +132,7 @@ export default class EditExpense extends Component {
 					<DatePicker id="meldeblaetter_start" label="Beginn Meldeblattperiode" value={sheet.meldeblaetter_start} callback={this.handleDateChange} callbackOrigin={this} />
 					<DatePicker id="meldeblaetter_end" label="Ende Meldeblattperiode" value={sheet.meldeblaetter_end} callback={this.handleDateChange} callbackOrigin={this} />
 					<InputField id="einsaetze_eligibleholiday" label="Ferienanspruch für Einsatz" value={sheet.einsaetze_eligibleholiday} disabled="true"/>
-					<InputField id="sum_tage" label="Dauer" value={sheet.sum_tage + " Tage"} disabled="true"/><hr />
+					<InputField id="meldeblaetter_tage" label="Dauer" value={sheet.meldeblaetter_tage + " Tage"} disabled="true"/><hr />
 
 					<InputFieldWithProposal id="meldeblaetter_workdays" valueLabel="Gearbeitet" value={sheet.meldeblaetter_workdays}
 											proposalValue={sheet.meldeblaetter_workdays_proposal} showComment={false} self={this} doValidation={true} />

@@ -127,7 +127,7 @@ export default class User extends Component {
         this.setState({loading:true, error:null});
 
         axios.put(
-            ApiService.BASE_URL+'reportsheet/',
+            ApiService.BASE_URL+'reportsheet',
             {
                 user: this.props.params.userid ? this.props.params.userid : null,
                 mission: missionId,
