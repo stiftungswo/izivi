@@ -76,10 +76,29 @@ export default class EditExpense extends Component {
 		}
 
 		origin.state['report_sheet'][e.target.name] = value;
+		origin.state['report_sheet']['meldeblaetter_tage'] = moment(origin.state['report_sheet']['meldeblaetter_end'])
+			.diff(moment(origin.state['report_sheet']['meldeblaetter_start']), 'days')+1;
 		origin.setState(this.state);
 	}
 
     save(){
+
+    	var requiredDays = this.state.report_sheet.meldeblaetter_tage;
+    	var providedDays = parseInt(this.state.report_sheet.meldeblaetter_workdays)
+            + parseInt(this.state.report_sheet.meldeblaetter_workfreedays)
+            + parseInt(this.state.report_sheet.meldeblaetter_companyurlaub)
+            + parseInt(this.state.report_sheet.meldeblaetter_ferien_wegen_urlaub)
+            + parseInt(this.state.report_sheet.meldeblaetter_add_workfree)
+            + parseInt(this.state.report_sheet.meldeblaetter_ill)
+            + parseInt(this.state.report_sheet.meldeblaetter_holiday)
+            + parseInt(this.state.report_sheet.meldeblaetter_urlaub);
+
+    	if(requiredDays!=providedDays){
+            Toast.showError('Anzahl Tage prüfen!', 'Die benötigte Anzahl Tage ('+requiredDays+') stimmt nicht mit der eingefüllten Anzahl ('+providedDays+') überein.', null, this.context)
+    		return;
+		}
+
+
         this.setState({loading:true, error:null});
         axios.post(
             ApiService.BASE_URL+'reportsheet/'+this.props.params.report_sheet_id,
@@ -134,18 +153,18 @@ export default class EditExpense extends Component {
 					<InputField id="einsaetze_eligibleholiday" label="Ferienanspruch für Einsatz" value={sheet.einsaetze_eligibleholiday} disabled="true"/>
 					<InputField id="meldeblaetter_tage" label="Dauer" value={sheet.meldeblaetter_tage + " Tage"} disabled="true"/><hr />
 
-					<InputFieldWithProposal id="meldeblaetter_workdays" valueLabel="Gearbeitet" value={sheet.meldeblaetter_workdays}
+					<InputFieldWithProposal id="meldeblaetter_workdays" valueLabel="Gearbeitet" value={sheet.meldeblaetter_workdays} inputType="number"
 											proposalValue={sheet.meldeblaetter_workdays_proposal} showComment={false} self={this} doValidation={true} />
 
-					<InputFieldWithProposal id="meldeblaetter_workfreedays" valueLabel="Arbeitsfreie Tage" value={sheet.meldeblaetter_workfreedays}
+					<InputFieldWithProposal id="meldeblaetter_workfreedays" valueLabel="Arbeitsfreie Tage" value={sheet.meldeblaetter_workfreedays} inputType="number"
 											proposalValue={sheet.meldeblaetter_workfreedays_proposal} showComment={true} doValidation={true}
 											commentId="meldeblaetter_workfree_comment" commentValue={sheet.meldeblaetter_workfree_comment} self={this} />
 
-					<InputFieldWithProposal id="meldeblaetter_companyurlaub" valueLabel="Betriebsferien (Urlaub)" value={sheet.meldeblaetter_companyurlaub}
+					<InputFieldWithProposal id="meldeblaetter_companyurlaub" valueLabel="Betriebsferien (Urlaub)" value={sheet.meldeblaetter_companyurlaub} inputType="number"
 											proposalValue={sheet.meldeblaetter_companyurlaub_proposal} showComment={true}
 											commentId="meldeblaetter_compholiday_comment" commentValue={sheet.meldeblaetter_compholiday_comment} self={this} />
 
-					<InputFieldWithProposal id="meldeblaetter_ferien_wegen_urlaub" valueLabel="Betriebsferien (Ferien)" value={sheet.meldeblaetter_ferien_wegen_urlaub}
+					<InputFieldWithProposal id="meldeblaetter_ferien_wegen_urlaub" valueLabel="Betriebsferien (Ferien)" value={sheet.meldeblaetter_ferien_wegen_urlaub} inputType="number"
 											proposalValue={sheet.meldeblaetter_ferien_wegen_urlaub_proposal} showComment={false} self={this} />
 
 					<InputField id="meldeblaetter_add_workfree" label="Zusätzlich Arbeitsfrei" value={sheet.meldeblaetter_add_workfree} disabled="true"/>
@@ -153,15 +172,15 @@ export default class EditExpense extends Component {
 						<InputField id="meldeblaetter_add_workfree_comment" label="Bemerkung" value={sheet.meldeblaetter_add_workfree_comment} self={this} />
 					</div><hr />
 
-					<InputFieldWithProposal id="meldeblaetter_ill" valueLabel="Krankheit" value={sheet.meldeblaetter_ill}
+					<InputFieldWithProposal id="meldeblaetter_ill" valueLabel="Krankheit" value={sheet.meldeblaetter_ill} inputType="number"
 											proposalValue={sheet.krankheitstage_verbleibend} proposalText="Übriges Guthaben: " showComment={true}
 											commentId="meldeblaetter_ill_comment" commentValue={sheet.meldeblaetter_ill_comment} self={this} />
 
-					<InputFieldWithProposal id="meldeblaetter_holiday" valueLabel="Ferien" value={sheet.meldeblaetter_holiday}
+					<InputFieldWithProposal id="meldeblaetter_holiday" valueLabel="Ferien" value={sheet.meldeblaetter_holiday} inputType="number"
 											proposalValue={sheet.remaining_holidays} proposalText="Übriges Guthaben: " showComment={true}
 											commentId="meldeblaetter_holiday_comment" commentValue={sheet.meldeblaetter_holiday_comment} self={this} />
 
-					<InputField id="meldeblaetter_urlaub" label="Persönlicher Urlaub" value={sheet.meldeblaetter_urlaub} self={this} />
+					<InputField id="meldeblaetter_urlaub" label="Persönlicher Urlaub" value={sheet.meldeblaetter_urlaub} self={this} inputType="number" />
 					<div class="proposalComment">
 						<InputField id="meldeblaetter_urlaub_comment" label="Bemerkung" value={sheet.meldeblaetter_urlaub_comment} self={this} />
 					</div><hr />
@@ -199,6 +218,10 @@ export default class EditExpense extends Component {
 							onClick={() => { this.deleteReportSheet()} }>
 						<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Löschen
 					</button>
+					<a type="button" name="print" class="btn btn-warning col-sm-2"
+							href={ApiService.BASE_URL+'pdf/zivireportsheet?reportSheetId='+this.props.params.report_sheet_id+'&jwttoken='+encodeURI(localStorage.getItem('jwtToken'))} target="_blank">
+						<span class="glyphicon glyphicon-print" aria-hidden="true"></span> Drucken
+					</a>
 					<div class="col-sm-6"></div>
 					<button type="button" name="deleteReport" class="btn btn-default col-sm-2"
 							onClick={() => { this.router.push('/profile/' + this.state['report_sheet']['user']) }}>Profil anzeigen</button>
