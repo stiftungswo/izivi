@@ -25,7 +25,7 @@ export default class UserFeedback extends Component {
         this.setState({loading: true, error: null});
 
         var missionId = this.props.params.missionId
-        
+
         axios.put(
             ApiService.BASE_URL+'user/feedback',
             {survey: survey.data, missionId: missionId},

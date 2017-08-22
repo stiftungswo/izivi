@@ -153,7 +153,7 @@ export default class Missions extends Component {
                 if(moment(m[i].end).isAfter(new Date()) || m[i].feedback_done == 1){
                     disabledMission.push(<div class="col-xs-1"></div>)
                 } else {
-                    disabledMission.push(<div class="col-xs-1"><a href={"/user_feedback/"+m[i].id} class="btn btn-xs btn-info"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Feedback</a></div>)
+                    disabledMission.push(<div class="col-xs-1"><a href={"/user_feedback/"+m[i].id} class="btn btn-xs btn-info"><span class="glyphicon glyphicon glyphicon-list" aria-hidden="true"></span> Feedback</a></div>)
                 }
 
                 missions.push(
