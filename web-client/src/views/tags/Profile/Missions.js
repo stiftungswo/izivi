@@ -144,9 +144,9 @@ export default class Missions extends Component {
                         <div class="col-xs-2">{moment(m[i].end, 'YYYY-MM-DD').format('DD.MM.YYYY')}</div>
                         <div class="col-xs-1"><a class="btn btn-xs"  href={ApiService.BASE_URL+'mission/'+curMission.id+'/draft?jwttoken='+encodeURI(localStorage.getItem('jwtToken'))} target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> Drucken</a></div>
                         <div class="col-xs-1"><button class="btn btn-xs btn-warning" data-toggle="modal" data-target={'#einsatzModal'+m[i].id}><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Bearbeiten</button></div>
-                        {disabledMission}
                         <div class="col-xs-1">{deleteButton}</div>
                         <div class="col-xs-1">{addButton}</div>
+						{disabledMission}
                     </div>
                 )
                 missions.push(this.renderMissions(self, m[i], ApiService.isAdmin()))
