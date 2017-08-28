@@ -36,9 +36,9 @@ export default class DatePicker extends InputField {
         if(this.props.showLabel !== undefined && this.props.showLabel !== '') {
             showLabel = this.props.showLabel;
         }
-
+		
         return this.getFormGroup (
-            <div class="input-group input-append date datePicker" id="datePicker">
+            <div class={"input-group input-append date " + (this.props.disabled ? "" : "datePicker")} id="datePicker">
                 <input
                     type="text"
                     class="form-control"
