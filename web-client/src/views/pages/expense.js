@@ -100,6 +100,11 @@ export default class MissionOverview extends Component {
     render(){
     	var tableBody = [];
         var sheets = this.state.report_sheets;
+        let statusIcon = (
+            <a data-toggle="popover" title="" data-content="Erledigt">
+                <span style="color:green;" className="glyphicon glyphicon-ok" aria-hidden="true"/>
+            </a>
+        );
 
         var even = true;
         for(let i=0;i<sheets.length;i++) {
@@ -123,10 +128,10 @@ export default class MissionOverview extends Component {
 					<td><a href={'/profile/'+sheets[i].userid}>{sheets[i].first_name} {sheets[i].last_name}</a></td>
 					<td class="center">{sheets[i].start}</td>
 					<td class="center">{sheets[i].end}</td>
+					<td>{sheets[i].done ? statusIcon : ''}</td>
 					<td>
 						<a href={'/expense/'+sheets[i].id}>Spesen bearbeiten</a>
 					</td>
-					<td>{sheets[i].done ? <span class="glyphicon glyphicon-ok" style="color:green"/> : ''}</td>
 				</tr>);
 			even = !even;
         }
