@@ -7,7 +7,6 @@ import ApiService from "../../utils/api";
 import LoadingView from "../tags/loading-view";
 import Header from "../tags/header";
 
-
 export default class UserFeedback extends Component {
 	
     constructor(props) {
@@ -49,15 +48,13 @@ export default class UserFeedback extends Component {
                 loading: false,
             };
 			
-			/*
-			// Survey example data with 3 questions
-			var surveyJSON = {pages:[{name:"User_Feedback_SWO",elements:[ {type:"panel",name:"SWOalsEinsatzbetrieb",elements:[{type:"radiogroup",name:"1",title:"WiewurdestduaufdieSWOaufmerksam?",isRequired:true,choices:[{value:"1.1",text:"Kollegen"},{value:"1.2",text:"EIS"},{value:"1.3",text:"WebsiteSWO"},{value:"1.4",text:"ThomasWinter"},{value:"1.5",text:"FrühererEinsatz"},{value:"1.6",text:"Anderes"}]}]}, {type:"matrix",columns:["1","2","3","4","5"],isAllRowRequired:true,isRequired:true,name:"12",rows:[{value:"13",text:"-dieArbeitstechniken?"},{value:"14",text:"-derUmgangmitMaschinen?"},{value:"15",text:"-SinnundZweckderProjekte?"}],title:"Wieguterklärtwurde(n)..."}]}]}
-			*/
-			
             Survey.Survey.cssType = "bootstrap";
+			Survey.defaultBootstrapCss.navigationButton = "btn btn-success";
+			
             var survey = new Survey.Model(response.data);
             $("#surveyContainer").Survey({
                 model: survey,
+				completeText: 'Danke für dein Feedback!',
                 onComplete: (survey)=>{this.sendDataToServer(survey)}
             });
 
@@ -67,7 +64,7 @@ export default class UserFeedback extends Component {
             this.setState({error: error});
         });
     }
-
+	
     componentDidMount() {
         this.getQuestionnaireJSON();
     }
@@ -88,3 +85,8 @@ export default class UserFeedback extends Component {
         );
     }
 }
+			
+/*
+// Survey example data with 3 questions
+var surveyJSON = {pages:[{name:"User_Feedback_SWO",elements:[ {type:"panel",name:"SWOalsEinsatzbetrieb",elements:[{type:"radiogroup",name:"1",title:"WiewurdestduaufdieSWOaufmerksam?",isRequired:true,choices:[{value:"1.1",text:"Kollegen"},{value:"1.2",text:"EIS"},{value:"1.3",text:"WebsiteSWO"},{value:"1.4",text:"ThomasWinter"},{value:"1.5",text:"FrühererEinsatz"},{value:"1.6",text:"Anderes"}]}]}, {type:"matrix",columns:["1","2","3","4","5"],isAllRowRequired:true,isRequired:true,name:"12",rows:[{value:"13",text:"-dieArbeitstechniken?"},{value:"14",text:"-derUmgangmitMaschinen?"},{value:"15",text:"-SinnundZweckderProjekte?"}],title:"Wieguterklärtwurde(n)..."}]}]}
+*/
