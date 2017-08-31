@@ -50,7 +50,8 @@ class ForgotPasswordController extends Controller
         $resetPW->token = bin2hex(openssl_random_pseudo_bytes(16));
         $resetPW->save();
         $result = mail($email, "iZivi Passwort vergessen",
-            utf8_decode("Hallo\nFür Ihren iZivi-Account wurde ein Passwort-Reset angefordert. Sie können unter http://izivi.stiftungswo.ch/resetPassword/".$resetPW->token." ein neues Passwort setzen."));
+            utf8_decode("Hallo\nFür Ihren iZivi-Account wurde ein Passwort-Reset angefordert. Sie können unter http://izivi.stiftungswo.ch/resetPassword/".$resetPW->token." ein neues Passwort setzen."),
+            "From: swo@stiftungswo.ch");
         if($result){
             return true;
         }else{
