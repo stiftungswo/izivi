@@ -1,4 +1,4 @@
-import Inferno from 'inferno';
+﻿import Inferno from 'inferno';
 import { Link } from 'inferno-router';
 import Card from '../tags/card';
 import axios from 'axios';
@@ -182,8 +182,8 @@ export default class UserFeedbackOverview extends Component {
 					if(custom_info && custom_info.choices) {
 						custom_info.choices.forEach(function(element) {
 							rows.push(
-								<div class="col-xs-2">
-									<label>{element.text}</label>
+                                <div class="col-xs-2">
+                                    <label>{element.text}</label>
 								</div>
 							);
 						});
@@ -191,13 +191,13 @@ export default class UserFeedbackOverview extends Component {
 									
                     feedbacks.push(
                         <div class="row">
-                            <div class="col-xs-7">
+                            <div class="col-xs-6">
                                 <label>
                                     {answers[x].question}
                                 </label>
                             </div>
-                            <div class="col-xs-5">
-                                <div class="row">{rows}</div>
+                            <div class="col-xs-6">
+                                <div class="row question6row">{rows}</div>
                                 <div class="row">{ this.getType1RowContent(6, answersCleaned, totalAnswers, 2) }</div>
                             </div>
                         </div>
