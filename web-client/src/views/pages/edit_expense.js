@@ -80,14 +80,14 @@ export default class EditExpense extends Component {
     save(){
 
     	var requiredDays = this.state.report_sheet.meldeblaetter_tage;
-    	var providedDays = parseInt(this.state.report_sheet.meldeblaetter_workdays)
-            + parseInt(this.state.report_sheet.meldeblaetter_workfreedays)
-            + parseInt(this.state.report_sheet.meldeblaetter_companyurlaub)
-            + parseInt(this.state.report_sheet.meldeblaetter_ferien_wegen_urlaub)
-            + parseInt(this.state.report_sheet.meldeblaetter_add_workfree)
-            + parseInt(this.state.report_sheet.meldeblaetter_ill)
-            + parseInt(this.state.report_sheet.meldeblaetter_holiday)
-            + parseInt(this.state.report_sheet.meldeblaetter_urlaub);
+    	var providedDays = parseInt(this.state.report_sheet.meldeblaetter_workdays) || 0
+            + parseInt(this.state.report_sheet.meldeblaetter_workfreedays) || 0
+            + parseInt(this.state.report_sheet.meldeblaetter_companyurlaub) || 0
+            + parseInt(this.state.report_sheet.meldeblaetter_ferien_wegen_urlaub) || 0
+            + parseInt(this.state.report_sheet.meldeblaetter_add_workfree) || 0
+            + parseInt(this.state.report_sheet.meldeblaetter_ill) || 0
+            + parseInt(this.state.report_sheet.meldeblaetter_holiday) || 0
+            + parseInt(this.state.report_sheet.meldeblaetter_urlaub) || 0;
 
     	if(requiredDays!=providedDays){
             Toast.showError('Anzahl Tage prüfen!', 'Die benötigte Anzahl Tage ('+requiredDays+') stimmt nicht mit der eingefüllten Anzahl ('+providedDays+') überein.', null, this.context)
