@@ -399,7 +399,7 @@ class ReportSheet extends Model
     }
 
     public static function getDiensttageCount($start, $end){
-        if(strtotime($end)>strtotime($start)){
+        if(strtotime($end)>=strtotime($start)){
 
             $dayCount = ReportSheet::countDaysBetween(strtotime($start), strtotime($end));
 
