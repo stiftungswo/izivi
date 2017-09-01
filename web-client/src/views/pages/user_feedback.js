@@ -6,6 +6,7 @@ import Component from 'inferno-component';
 import ApiService from "../../utils/api";
 import LoadingView from "../tags/loading-view";
 import Header from "../tags/header";
+import Toast from "../../utils/toast";
 
 export default class UserFeedback extends Component {
 	
@@ -13,7 +14,6 @@ export default class UserFeedback extends Component {
         super(props);
 
         this.state = {
-            surveyJSON:[],
             loading:false,
             error:null
         };
@@ -44,20 +44,26 @@ export default class UserFeedback extends Component {
         ).then((response) => {
 
             var newState = {
-                surveyJSON: response.data,
                 loading: false,
             };
 			
             Survey.Survey.cssType = "bootstrap";
 			Survey.defaultBootstrapCss.navigationButton = "btn btn-success";
 			
-            var survey = new Survey.Model(response.data);
-            $("#surveyContainer").Survey({
-                model: survey,
-				completeText: 'Danke für dein Feedback!',
-                onComplete: (survey)=>{this.sendDataToServer(survey)}
-            });
-
+			let surveyJSON = this.tryGetObject(response.data);
+						
+			if(surveyJSON) {
+				var survey = new Survey.Model(surveyJSON);
+				$("#surveyContainer").Survey({
+					model: survey,
+					completeText: 'Danke für dein Feedback!',
+					onComplete: (survey)=>{this.sendDataToServer(survey)}
+				});
+			}
+			else {
+				Toast.showError('Problem in der Konfiguration', 'Die Datenbank-Konfiguration des Fragebogens stimmt nicht. Bitte melde dich bei einem Admin.', this.context);
+			}
+			
             this.setState(newState);
 
         }).catch((error) => {
@@ -84,6 +90,14 @@ export default class UserFeedback extends Component {
             </Header>
         );
     }
+	
+	tryGetObject(o){
+		if (o && typeof o === "object") {
+			return o;
+		}
+
+		return false;
+	};
 }
 			
 /*
