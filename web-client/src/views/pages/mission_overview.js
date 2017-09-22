@@ -97,6 +97,14 @@ export default class MissionOverview extends Component {
             }
         }
 
+        var startDates = [];
+        var endDates = [];
+
+        for(var x=1; x<=52; x++) {
+            startDates[x] = moment(this.state.year + " " + x + " 1", "YYYY WW E").format("DD.MM.YYYY")
+            endDates[x] = moment(this.state.year + " " + x + " 5", "YYYY WW E").format("DD.MM.YYYY")
+        }
+
         var tbody = [];
 
         for(var i=0; i<userMissions.length; i++){
@@ -110,8 +118,8 @@ export default class MissionOverview extends Component {
 
             for(var x=1; x<=52; x++){
 
-                let popOverStart = moment(this.state.year + " " + x + " 1", "YYYY WW E").format("DD.MM.YYYY")
-                let popOverEnd = moment(this.state.year + " " + x + " 5", "YYYY WW E").format("DD.MM.YYYY")
+                let popOverStart = startDates[x];
+                let popOverEnd = endDates[x];
 
                 var curMission = userMissions[i][missionCounter];
                 var startWeek = moment(curMission.start).isoWeek();
@@ -124,15 +132,15 @@ export default class MissionOverview extends Component {
                 }
 
                 if(x<startWeek || x>endWeek){
-                    cells.push(<td data-toggle="popover" data-content={popOverStart + ' - ' + popOverEnd}></td>)
+                    cells.push(<td title={popOverStart + ' - ' + popOverEnd}></td>)
                 }else{
                     weekCount[curMission.specification][x]++;
                     if(x==startWeek) {
-                        cells.push(<td class={curMission.draft==null ? 'einsatzDraft' : 'einsatz'} data-toggle="popover" data-content={popOverStart + ' - ' + popOverEnd}>{new Date(curMission.start).getDate()}</td>)
+                        cells.push(<td class={curMission.draft==null ? 'einsatzDraft' : 'einsatz'} title={popOverStart + ' - ' + popOverEnd}>{new Date(curMission.start).getDate()}</td>)
                     } else if(x==endWeek) {
-                        cells.push(<td class={curMission.draft==null ? 'einsatzDraft' : 'einsatz'}  data-toggle="popover" data-content={popOverStart + ' - ' + popOverEnd}>{new Date(curMission.end).getDate()}</td>)
+                        cells.push(<td class={curMission.draft==null ? 'einsatzDraft' : 'einsatz'}  title={popOverStart + ' - ' + popOverEnd}>{new Date(curMission.end).getDate()}</td>)
                     } else{
-                        cells.push(<td class={curMission.draft==null ? 'einsatzDraft' : 'einsatz'} data-toggle="popover" data-content={popOverStart + ' - ' + popOverEnd}>x</td>)
+                        cells.push(<td class={curMission.draft==null ? 'einsatzDraft' : 'einsatz'} title={popOverStart + ' - ' + popOverEnd}>x</td>)
                     }
 
                     if(x==endWeek && missionCounter<userMissions[i].length-1){
