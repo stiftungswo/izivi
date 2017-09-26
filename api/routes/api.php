@@ -124,6 +124,13 @@ $api->version('v1', function ($api) {
             return response()->json(ReportSheet::getDiensttageCount($start, $end));
         });
 
+        $api->get('/diensttageEndDate', function(){
+            $start = Input::get("start", "");
+            $days = Input::get("days", "0");
+
+            return response()->json(ReportSheet::getDiensttageEndDate($start, $days));
+        });
+
         $api->put('/mission', function(){
             $mission = new App\Mission();
             $mission->user = Input::get("user", "");
@@ -135,7 +142,7 @@ $api->version('v1', function ($api) {
             $mission->first_time = Input::get("first_time", false);
             $mission->long_mission = Input::get("long_mission", false);
             $mission->probation_period = Input::get("probation_period", false);
-           
+
             $user = JWTAuth::parseToken()->authenticate();
             if(!$user->isAdmin() && $user->id!=$mission->user){
                 return response("not allowed", 401);
@@ -155,7 +162,7 @@ $api->version('v1', function ($api) {
             $mission->first_time = Input::get("first_time", false);
             $mission->long_mission = Input::get("long_mission", false);
             $mission->probation_period = Input::get("probation_period", false);
-            
+
             $user = JWTAuth::parseToken()->authenticate();
             if(!$user->isAdmin() && ($user->id!=$mission->user || $mission->draft!=null)){
                 return response("not allowed", 401);
@@ -483,7 +490,7 @@ $api->version('v1', function ($api) {
                 $sheet->save();
                 return response("updated");
             });
-            $api->get('/reportsheet/user/{id}', function ($id) { 
+            $api->get('/reportsheet/user/{id}', function ($id) {
                  $reportSheets = App\ReportSheet::join('users', 'report_sheets.user', '=', 'users.id')
                     ->select('report_sheets.id AS id', 'start', 'end', 'state')
                     ->where('users.id', '=', $id)

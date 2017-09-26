@@ -63,7 +63,7 @@ export default class Missions extends Component {
                             </div>
                             <DatePicker value={self.state['result'][missionKey+'_start']} id={missionKey+'_start'} label="Einsatzbeginn" callback={(e)=>{self.handleDateChange(e,self);this.getMissionDays(self, missionKey)}} callbackOrigin={self} />
                             <DatePicker value={self.state['result'][missionKey+'_end']} id={missionKey+'_end'} label="Einsatzende" callback={(e)=>{self.handleDateChange(e,self);this.getMissionDays(self, missionKey)}} callbackOrigin={self} />
-                            <InputFieldWithHelpText  value={self.state['result'][missionKey+'_days']} id={missionKey+'_days'} label="Tage" popoverText={howerText_Tage} self={self} disabled="true"/>
+                            <InputFieldWithHelpText value={self.state['result'][missionKey+'_days']} id={missionKey+'_days'} label="Tage" popoverText={howerText_Tage} callback={(e)=>{self.handleChange(e, self);this.calculateMissionEndDate(e, self, missionKey)}} self={self} />
 
                             <InputCheckbox value={self.state['result'][missionKey+'_first_time']} id={missionKey+'_first_time'} label="Erster SWO Einsatz" self={self} />
                             <InputCheckbox value={self.state['result'][missionKey+'_long_mission']} id={missionKey+'_long_mission'} label="Langer Einsatz oder Teil davon" self={self} />
@@ -200,7 +200,7 @@ export default class Missions extends Component {
             Toast.showError('Falsches Einsatzende', 'Letzter Einsatztag muss zwingend ein Freitag sein! (Ausnahme: letzter Einsatz)', null, self.context);
             return;
         }
-		
+
 		if(!moment(newMission['start']).isSameOrBefore(moment(newMission['end']))) {
 			Toast.showError('Falsches Einsatzdauer', 'Erster Einsatztag nach dem letzten Einsatztag', null, self.context);
             return;
@@ -250,21 +250,45 @@ export default class Missions extends Component {
             Toast.showError('Löschen fehlgeschlagen', 'Einsatz konnte nicht gelöscht werden', error, self.context)
             self.setState({loading:false, error:null});
         });
-
     }
 
-    getMissionDays(self, missionKey){
+    calculateMissionEndDate(e, self, missionKey) {
 
-        self.state.result[missionKey+'_days'] = '';
-        self.setState(self.state);
+      self.state['result'][e.target.name] = e.target.value; // update days
+      self.setState(self.state);
+      let startDate = self.state['result'][missionKey+'_start'];
 
+      if(e.target.value && e.target.value > 0 && startDate) {
+        axios.get(
+            ApiService.BASE_URL+'diensttageEndDate?start='+startDate+'&days='+self.state.result[missionKey+'_days'],
+            { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
+        ).then((response) => {
+          if(response && response.data) {
+            self.state.result[missionKey+'_end'] = response.data;
+            self.setState(self.state);
+          }
+        }).catch((error) => {
+            self.setState({loading:false, error:null});
+        });
+      }
+    }
+
+    getMissionDays(self, missionKey) {
+      self.state.result[missionKey+'_days'] = '';
+      self.setState(self.state);
+
+      if(self.state.result[missionKey+'_start'] && self.state.result[missionKey+'_end']) {
         axios.get(
             ApiService.BASE_URL+'diensttage?start='+self.state.result[missionKey+'_start']+'&end='+self.state.result[missionKey+'_end'],
             { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
         ).then((response) => {
+          if(response && response.data) {
             self.state.result[missionKey+'_days'] = response.data;
             self.setState(self.state);
+          }
+        }).catch((error) => {
+            self.setState({loading:false, error:null});
         });
+      }
     }
-
 }
