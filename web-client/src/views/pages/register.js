@@ -62,7 +62,7 @@ export default class Register extends Component {
 								<div class="form-group">
 									<label class="control-label col-sm-3" for="zdp">ZDP:</label>
 									<div class="col-sm-9">
-										<input type="number" class="form-control" name="zdp" id="zdp" value={ this.state.formData.zdp } onChange={ this.handleChange.bind(this) } min="10000" max="100000" required/>
+										<input type="number" class="form-control" name="zdp" id="zdp" value={ this.state.formData.zdp } onChange={ this.handleChange.bind(this) } min="10000" max="1000000" required/>
 									</div>
 								</div>
 								<div class="form-group">
