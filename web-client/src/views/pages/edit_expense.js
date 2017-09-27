@@ -18,7 +18,8 @@ export default class EditExpense extends Component {
         super(props);
 
         this.state = {
-        	report_sheet: null
+        	report_sheet: null,
+          force_save: false
 		};
 
 		this.router = router;
@@ -77,21 +78,31 @@ export default class EditExpense extends Component {
 		origin.setState(this.state);
 	}
 
+  handleForceSave(e) {
+      const value = e.target.checked;
+      this.state.force_save = value;
+      this.setState(this.state);
+  }
+
     save(){
 
     	var requiredDays = this.state.report_sheet.meldeblaetter_tage;
-    	var providedDays = parseInt(this.state.report_sheet.meldeblaetter_workdays) || 0
-            + parseInt(this.state.report_sheet.meldeblaetter_workfreedays) || 0
-            + parseInt(this.state.report_sheet.meldeblaetter_companyurlaub) || 0
-            + parseInt(this.state.report_sheet.meldeblaetter_ferien_wegen_urlaub) || 0
-            + parseInt(this.state.report_sheet.meldeblaetter_add_workfree) || 0
-            + parseInt(this.state.report_sheet.meldeblaetter_ill) || 0
-            + parseInt(this.state.report_sheet.meldeblaetter_holiday) || 0
-            + parseInt(this.state.report_sheet.meldeblaetter_urlaub) || 0;
+    	var providedDays =
+              (parseInt(this.state.report_sheet.meldeblaetter_workdays) || 0)
+            + (parseInt(this.state.report_sheet.meldeblaetter_workfreedays) || 0)
+            + (parseInt(this.state.report_sheet.meldeblaetter_companyurlaub) || 0)
+            + (parseInt(this.state.report_sheet.meldeblaetter_ferien_wegen_urlaub) || 0)
+            + (parseInt(this.state.report_sheet.meldeblaetter_add_workfree) || 0)
+            + (parseInt(this.state.report_sheet.meldeblaetter_ill) || 0)
+            + (parseInt(this.state.report_sheet.meldeblaetter_holiday) || 0)
+            + (parseInt(this.state.report_sheet.meldeblaetter_urlaub) || 0);
 
     	if(requiredDays!=providedDays){
             Toast.showError('Anzahl Tage prüfen!', 'Die benötigte Anzahl Tage ('+requiredDays+') stimmt nicht mit der eingefüllten Anzahl ('+providedDays+') überein.', null, this.context)
-    		return;
+
+            if(!this.state.force_save) {
+              return;
+            }
 		}
 
 
@@ -230,6 +241,11 @@ export default class EditExpense extends Component {
 						<button type="button" name="deleteReport" class="btn btn-default col-sm-2"
 								onClick={() => { this.router.push('/profile/' + this.state['report_sheet']['user']) }}>Profil anzeigen</button>
 					</div>
+          <br /><br />
+
+          <div class="container">
+            <InputCheckbox id="force_save" value={this.state.force_save} label="Speichern erzwingen" self={this} callback={(e)=>this.handleForceSave(e)} />
+          </div>
 				</form>
 					<br /><br />
 					<br /><br />
