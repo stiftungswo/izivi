@@ -3,9 +3,9 @@
 namespace App;
 
 use App\Http\Controllers\PDF\PDF;
+use App\Http\Controllers\MissionController;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use \DateTime;
 
 class ReportSheet extends Model
@@ -400,16 +400,16 @@ class ReportSheet extends Model
         return mktime(0, 0, 0, $m, $d + 1, $y);
     }
 
-    public static function getDiensttageCount($start, $end) {
+    public static function getDiensttageCount($start, $end, $long_mission = false) {
         if(strtotime($end)>=strtotime($start)) {
             $dayCount = ReportSheet::countDaysBetween(strtotime($start), strtotime($end));
-            return ReportSheet::subtractFreeDays($start, $end, $dayCount);
+            return ReportSheet::subtractFreeDays($start, $end, $dayCount, $long_mission);
         } else {
             return 0;
         }
     }
 
-    public static function getDiensttageEndDate($start, $days) {
+    public static function getDiensttageEndDate($start, $days, $long_mission) {
 
         $end = $start;
         if(isset($days) && $days > 0) {
@@ -424,7 +424,7 @@ class ReportSheet extends Model
           while($chargedDays < $days && $chargedDays < 400) {
             $lastEnd = $end;
             $end = ReportSheet::addDaysToDate($end, 1);
-            $chargedDays = ReportSheet::getDiensttageCount($start, $end);
+            $chargedDays = ReportSheet::getDiensttageCount($start, $end, $long_mission);
 
             if($chargedDays < $days+1) {
               $hasHolidays = true;
@@ -443,7 +443,8 @@ class ReportSheet extends Model
     /**
     * Subtracts the number of days that are "Betriebsferien" and not "Feiertage"
     */
-    private static function subtractFreeDays($start, $end, $dayCount) {
+    private static function subtractFreeDays($start, $end, $dayCount, $long_mission) {
+      $ziviHolidays = MissionController::calculateZiviHolidays($long_mission, $dayCount);
 
       $betriebsferien = Holiday::join('holiday_types', 'holidays.holiday_type', '=', 'holiday_types.id')
           ->whereDate('date_from', '<=',  $end)
@@ -471,8 +472,13 @@ class ReportSheet extends Model
                           break;
                       }
                   }
-                  if(!$isInFeiertag){
-                      $dayCount--;
+                  if(!$isInFeiertag) {
+                      if($ziviHolidays > 0) {
+                        $ziviHolidays--;
+                      }
+                      else {
+                        $dayCount--;
+                      }
                   }
               }
           }

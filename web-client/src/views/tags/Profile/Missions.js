@@ -66,7 +66,7 @@ export default class Missions extends Component {
                             <InputFieldWithHelpText value={self.state['result'][missionKey+'_days']} id={missionKey+'_days'} label="Tage" popoverText={howerText_Tage} callback={(e)=>{self.handleChange(e, self);this.calculateMissionEndDate(e, self, missionKey)}} self={self} />
 
                             <InputCheckbox value={self.state['result'][missionKey+'_first_time']} id={missionKey+'_first_time'} label="Erster SWO Einsatz" self={self} />
-                            <InputCheckbox value={self.state['result'][missionKey+'_long_mission']} id={missionKey+'_long_mission'} label="Langer Einsatz oder Teil davon" self={self} />
+                            <InputCheckbox value={self.state['result'][missionKey+'_long_mission']} id={missionKey+'_long_mission'} label="Langer Einsatz oder Teil davon" callback={(e)=>{self.handleChange(e);this.getMissionDays(self, missionKey)}} self={self} />
                             <InputCheckbox value={self.state['result'][missionKey+'_probation_period']} id={missionKey+'_probation_period'} label="Probeeinsatz" self={self} />
 
                             <hr/>
@@ -259,8 +259,14 @@ export default class Missions extends Component {
       let startDate = self.state['result'][missionKey+'_start'];
 
       if(e.target.value && e.target.value > 0 && startDate) {
+
+        let long_mission = self.state.result[missionKey+'_long_mission'];
+        if(!long_mission) {
+          long_mission = false;
+        }
+
         axios.get(
-            ApiService.BASE_URL+'diensttageEndDate?start='+startDate+'&days='+self.state.result[missionKey+'_days'],
+            ApiService.BASE_URL+'diensttageEndDate?start='+startDate+'&days='+self.state.result[missionKey+'_days']+'&long_mission='+long_mission,
             { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
         ).then((response) => {
           if(response && response.data) {
@@ -277,9 +283,14 @@ export default class Missions extends Component {
       self.state.result[missionKey+'_days'] = '';
       self.setState(self.state);
 
+      let long_mission = self.state.result[missionKey+'_long_mission'];
+      if(!long_mission) {
+        long_mission = false;
+      }
+
       if(self.state.result[missionKey+'_start'] && self.state.result[missionKey+'_end']) {
         axios.get(
-            ApiService.BASE_URL+'diensttage?start='+self.state.result[missionKey+'_start']+'&end='+self.state.result[missionKey+'_end'],
+            ApiService.BASE_URL+'diensttage?start='+self.state.result[missionKey+'_start']+'&end='+self.state.result[missionKey+'_end']+'&long_mission='+long_mission,
             { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
         ).then((response) => {
           if(response && response.data) {
