@@ -13,7 +13,7 @@ class AuthTest extends TestCase
      * @return void
      */
     public function testLoginWithWrongValidation()
-    {
+    {        
         $this->artisan('db:seed');
 
         $this->json('post', 'api/auth/login', [
