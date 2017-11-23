@@ -11,14 +11,14 @@ export default class RegionalCenters extends Component {
         var options = [];
         options.push(<option value=""></option>);
 
-        for(let i = 0; i < state.regianlCenters.length; i++) {
+        for(let i = 0; i < state.regionalCenters.length; i++) {
 
             let isSelected = false;
             if(parseInt(state.result['regional_center']) == i+1) {
                 isSelected = true;
             }
 
-            options.push(<option value={state.regianlCenters[i].id} selected={isSelected}>{state.regianlCenters[i].name}</option>)
+            options.push(<option value={state.regionalCenters[i].id} selected={isSelected}>{state.regionalCenters[i].name}</option>)
         }
 
         return options;
@@ -30,7 +30,7 @@ export default class RegionalCenters extends Component {
             { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
         ).then((response) => {
             self.setState({
-                regianlCenters : response.data,
+                regionalCenters : response.data,
             });
         }).catch((error) => {
             self.setState({error: error});
