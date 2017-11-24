@@ -208,7 +208,7 @@ export default class Missions extends Component {
 
         self.setState({loading:true, error:null});
         if(missionKey=="newmission"){
-            axios.put(
+            axios.post(
                 ApiService.BASE_URL+'mission',
                 newMission,
                 { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
@@ -221,7 +221,7 @@ export default class Missions extends Component {
                 Toast.showError('Speichern fehlgeschlagen', 'Neuer Einsatz konnte nicht gespeichert werden', error, self.context)
             });
         }else{
-            axios.post(
+            axios.put(
                 ApiService.BASE_URL+'mission/'+missionKey,
                 newMission,
                 { headers: { Authorization: "Bearer " + localStorage.getItem('jwtToken') } }
