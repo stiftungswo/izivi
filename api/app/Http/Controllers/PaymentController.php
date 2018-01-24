@@ -166,7 +166,7 @@ class PaymentController extends Controller
 
         return (new Response($xml, 200))
             ->header('Content-Type', 'application/xml')
-            ->header('Content-Disposition', 'attachment; filename="zahlung.xml"');
+            ->header('Content-Disposition', 'attachment; filename="'.$this->generatePaymentName($payment).'"');
     }
 
 
@@ -184,7 +184,11 @@ class PaymentController extends Controller
         $payment = Payment::find($id);
         return (new Response($payment->xml, 200))
             ->header('Content-Type', 'application/xml')
-            ->header('Content-Disposition', 'attachment; filename="zahlung.xml"');
+            ->header('Content-Disposition', 'attachment; filename="'.$this->generatePaymentName($payment).'"');
+    }
+
+    private function generatePaymentName(Payment $payment){
+        return "zahlung-{$payment->id}_{$payment->updated_at->format('Y-m-d')}.xml";
     }
 
 }
