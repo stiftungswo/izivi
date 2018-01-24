@@ -108,7 +108,7 @@ export default class ExpensePayment extends Component {
 														<form method="POST" action={ApiService.BASE_URL+"reportsheet/payments/execute"} onSubmit={()=>setTimeout(()=>{this.getReportSheets()}, 2000)}>
 															<input type="hidden" name="data" value={JSON.stringify(this.state.report_sheets.valid)}/>
 															<input type="hidden" name="jwttoken" value={localStorage.getItem('jwtToken')}/>
-                              <input type="submit" class="btn btn-primary" value="Zahlung auslösen"></input>
+                              <input type="submit" class="btn btn-primary" value="Zahlungsdatei generieren"></input>
 														</form>
                             <br /><br />
                         </div>}
