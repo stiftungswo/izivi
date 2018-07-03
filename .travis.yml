@@ -6,11 +6,15 @@ before_script:
   - ./ci/check_format.sh
   - cp ./api/.env.travis ./api/.env
   - ./ci/backend.sh
+  - ./ci/install_node.sh
 script:
-  - ./ci/test.sh
+  - ./ci/test_backend.sh
+  - ./ci/test_frontend.sh
   - ./ci/frontend.sh
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+addons:
+  firefox: "61.0"
 deploy:
   - provider: script
     script: ci/deploy.sh test

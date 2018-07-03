@@ -1,6 +1,8 @@
 <?php
 
+use App\User;
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 
 class UserTableSeeder extends Seeder
 {
@@ -11,14 +13,7 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-            'first_name' => 'John',
-            'last_name' => ' Doe',
-            'email' => 'johndoe@example.com',
-            'password' => app('hash')->make('johndoe'),
-            'remember_token' => str_random(10),
-            'role' => 2,
-            'regional_center' => 2
-        ]);
+        factory(User::class, 'admin')->create();
+        factory(User::class, 10)->create();
     }
 }
