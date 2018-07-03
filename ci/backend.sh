@@ -2,5 +2,4 @@
 
 cd api
 composer install --no-interaction && \
-php artisan db:create && \
-php artisan migrate --seed
+php artisan db:create

@@ -6,6 +6,8 @@ before_script:
   - ./ci/check_format.sh
   - cp ./api/.env.travis ./api/.env
   - ./ci/backend.sh
+  - cd api && php artisan serve &
+  - nvm install 8.3 && nvm use 8.3
   - ./ci/install_node.sh
 script:
   - ./ci/test_backend.sh

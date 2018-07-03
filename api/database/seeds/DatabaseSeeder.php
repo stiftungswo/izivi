@@ -14,5 +14,6 @@ class DatabaseSeeder extends Seeder
         // seed random data generator
         app(\Faker\Generator::class)->seed(123);
         $this->call('UserTableSeeder');
+        app(\Faker\Generator::class)->seed();
     }
 }
