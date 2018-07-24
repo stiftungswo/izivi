@@ -11,6 +11,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call('UserTableSeeder');
+        // seed random data generator
+        app(\Faker\Generator::class)->seed(123);
+        $this->call([
+            UserTableSeeder::class,
+            HolidayTableSeeder::class,
+        ]);
+        app(\Faker\Generator::class)->seed();
     }
 }

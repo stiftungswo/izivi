@@ -44,3 +44,16 @@ $factory->defineAs(App\User::class, 'admin', function (Generator $faker) use ($f
     $user['role'] = 1;
     return $user;
 });
+
+$factory->define(App\Holiday::class, function (Generator $faker) {
+    $from = $faker->dateTimeThisYear;
+
+    return [
+        'date_from' => $from->format('Y-m-d'),
+        'date_to' => $faker->dateTimeInInterval($from, '+ 3 days'),
+        'holiday_type' => function () use ($faker) {
+            return App\HolidayType::find($faker->randomElement([1,2,2,2,2,2,2,2,2])); // 1 = Betriebsferien, 2 = Feiertag
+        },
+        'description' => $faker->word
+    ];
+});

@@ -8,7 +8,7 @@ export default class InputField extends Component {
     }
 
     return (
-      <div className={'form-group ' + this.props.groupClass}>
+      <div className={['form-group ', this.props.groupClass].join(' ')}>
         {showLabel ? (
           <label className="control-label col-sm-3" htmlFor={this.props.id}>
             {this.props.label}
