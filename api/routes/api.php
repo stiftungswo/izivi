@@ -464,7 +464,7 @@ $router->group(['namespace' => 'api', 'prefix' => 'api'], function () use ($rout
                 $report->start = $mission->start;
                 $report->end = $mission->end;
                 $report->bank_account_number = CompanyInfo::DEFAULT_ACCOUNT_NUMBER_REPORT_SHEETS;
-                $report->additional_workfree = null;
+                $report->additional_workfree = 0;
                 $report->save();
 
                 return response("inserted");
