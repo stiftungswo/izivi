@@ -178,14 +178,8 @@ class AufgebotPDF extends PDF
         $this->pdf->Cell(0, 0, $this->zivi['zip'] . " " . $this->zivi['city']);
         $this->nextrow($row);
 
-        $this->pdf->SetXY($colLeft, $row);
-        if ($this->zivi['phone_private'] != 0) {
-            $this->pdf->Cell(0, 0, $this->zivi['phone_private']);
-        }
         $this->pdf->SetXY($colRight, $row);
-        if ($this->zivi['phone_mobile'] != 0) {
-            $this->pdf->Cell(0, 0, $this->zivi['phone_mobile']);
-        }
+        $this->pdf->Cell(0, 0, $this->zivi['phone']);
         $this->nextrow($row);
 
         $colLeft = 50;
