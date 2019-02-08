@@ -24,7 +24,7 @@ export default class UserFeedbackNew extends React.Component {
     api()
       .get('user_feedback_questions')
       .then(response => {
-        this.generateInitialState(response.data.user_feedback_questions);
+        this.generateInitialState(response.data);
       });
   }
 
