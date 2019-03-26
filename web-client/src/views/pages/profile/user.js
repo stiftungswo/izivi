@@ -331,7 +331,7 @@ export default class User extends Component {
           <InputCheckbox
             id={'chainsaw_workshop'}
             value={user.chainsaw_workshop}
-            label={'Motorsagenkurs bereits absolviert'}
+            label={'Motorsägekurs bereits absolviert'}
             onChange={this.handleChange}
           />
 
