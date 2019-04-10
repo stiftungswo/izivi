@@ -172,6 +172,23 @@ export interface UserFeedback {
   id?: number;
 }
 
+export enum UserFeedbackQuestionType {
+  LikertScale = 1,
+  SectionTitle = 2,
+  FreeText = 3,
+  YesOrNo = 4,
+  MultipleChoice = 5,
+}
+
+export interface UserFeedbackQuestion {
+  id?: number;
+  question: string;
+  page: number;
+  type: number;
+  custom_info: string;
+  options: string[];
+}
+
 export interface UserQuestionWithAnswers {
   id?: number;
   answers: UserQuestionAnswers;
