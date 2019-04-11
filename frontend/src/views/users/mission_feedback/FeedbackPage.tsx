@@ -1,7 +1,11 @@
 import * as React from 'react';
 
-export class FeedbackPage extends React.Component {
+interface FeedbackPageProps {
+  page: number;
+}
+
+export class FeedbackPage extends React.Component<FeedbackPageProps> {
   render() {
-    return <div>page</div>;
+    return <div>Page {this.props.page}</div>;
   }
 }
