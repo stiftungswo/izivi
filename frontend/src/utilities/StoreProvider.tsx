@@ -8,6 +8,7 @@ import { MissionStore } from '../stores/missionStore';
 import { PaymentStore } from '../stores/paymentStore';
 import { ReportSheetStore } from '../stores/reportSheetStore';
 import { SpecificationStore } from '../stores/specificationStore';
+import { UserFeedbackQuestionStore } from '../stores/userFeedbackQuestionStore';
 import { UserFeedbackStore } from '../stores/userFeedbackStore';
 import { UserStore } from '../stores/userStore';
 import { Formatter } from './formatter';
@@ -17,7 +18,7 @@ interface Props {
 }
 
 export class StoreProvider extends React.Component<Props> {
-  private stores: {
+  private readonly stores: {
     apiStore: ApiStore;
     mainStore: MainStore;
     holidayStore: HolidayStore;
@@ -27,6 +28,7 @@ export class StoreProvider extends React.Component<Props> {
     userStore: UserStore;
     missionStore: MissionStore;
     specificationStore: SpecificationStore;
+    userFeedbackQuestionStore: UserFeedbackQuestionStore;
   };
 
   constructor(props: Props) {
@@ -46,6 +48,7 @@ export class StoreProvider extends React.Component<Props> {
       userStore: new UserStore(mainStore),
       missionStore: new MissionStore(mainStore),
       specificationStore: new SpecificationStore(mainStore),
+      userFeedbackQuestionStore: new UserFeedbackQuestionStore(mainStore),
     };
   }
   render() {
