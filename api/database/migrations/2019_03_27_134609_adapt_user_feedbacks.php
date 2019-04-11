@@ -23,7 +23,7 @@ class AdaptUserFeedbacks extends Migration
             ->orderBy('pos')
             ->get();
 
-        $current_page = 1;
+        $current_page = 0;
         $feedbacks->each(function($feedback) use (&$current_page) {
             $current_page += $feedback->new_page;
 

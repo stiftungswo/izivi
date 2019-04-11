@@ -32,7 +32,8 @@ class FeedbackController extends Controller
 
     public function index()
     {
-        return UserFeedbackQuestion::all();
+        return UserFeedbackQuestion::orderBy('pos')
+          ->get(['id', 'question', 'type', 'page', 'custom_info', 'opt1', 'opt2', 'opt3']);
     }
 
     public function postFeedback()
