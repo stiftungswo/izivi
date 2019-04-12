@@ -20,6 +20,10 @@ export class MissionFeedback extends React.Component<MissionFeedbackProps, Missi
     return parseInt(this.props.match.params.page, 10);
   }
 
+  get missionId() {
+    return parseInt(this.props.match.params.id, 10);
+  }
+
   constructor(props: MissionFeedbackProps) {
     super(props);
 
@@ -45,7 +49,7 @@ export class MissionFeedback extends React.Component<MissionFeedbackProps, Missi
           <Progress max={this.props.userFeedbackQuestionStore!.pages.length} value={this.currentPage} className={'mt-3'}/>
         </div>
 
-        <FeedbackPage page={this.currentPage}/>
+        <FeedbackPage page={this.currentPage} missionId={this.missionId}/>
       </IziviContent>
     );
   }
