@@ -181,10 +181,10 @@ export enum UserFeedbackQuestionType {
 }
 
 export interface UserFeedbackQuestion {
-  id?: number;
+  id: number;
   question: string;
   page: number;
-  type: number;
+  type: UserFeedbackQuestionType;
   custom_info: string;
   options: string[];
 }
