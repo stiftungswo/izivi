@@ -3,31 +3,53 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Progress } from 'reactstrap';
 import IziviContent from '../../../layout/IziviContent';
-import { UserFeedbackStore } from '../../../stores/userFeedbackStore';
+import { UserFeedbackQuestionStore } from '../../../stores/userFeedbackQuestionStore';
 import { FeedbackPage } from './FeedbackPage';
 
-interface MissionFeedbackProps extends RouteComponentProps<{ id?: string }> {
-  userFeedbackStore?: UserFeedbackStore;
+interface MissionFeedbackProps extends RouteComponentProps<{ id: string, page: string }> {
+  userFeedbackQuestionStore?: UserFeedbackQuestionStore;
 }
 
-@inject('missionStore')
-export class MissionFeedback extends React.Component<MissionFeedbackProps> {
+interface MissionFeedbackState {
+  loading: boolean;
+}
+
+@inject('userFeedbackQuestionStore')
+export class MissionFeedback extends React.Component<MissionFeedbackProps, MissionFeedbackState> {
+  get currentPage() {
+    return parseInt(this.props.match.params.page, 10);
+  }
+
+  get missionId() {
+    return parseInt(this.props.match.params.id, 10);
+  }
+
   constructor(props: MissionFeedbackProps) {
     super(props);
+
+    this.state = {
+      loading: true,
+    };
+
+    props.userFeedbackQuestionStore!.fetchAll().then(this.handleUserFeedbackQuestions.bind(this));
+  }
+
+  handleUserFeedbackQuestions() {
+    this.setState({ loading: false });
   }
 
   render() {
     return (
-      <IziviContent card loading={false} title={'Feedback zu Einsatz abgeben'}>
+      <IziviContent card loading={this.state.loading} title={'Feedback zu Einsatz abgeben'}>
         <div>
           <small>
             <strong>Hinweis:</strong> Alle Fragen, welche mit (*) enden, sind erforderlich und müssen ausgefüllt werden.
           </small>
 
-          <Progress max={7} value={1} className={'mt-3'} />
+          <Progress max={this.props.userFeedbackQuestionStore!.pages.length} value={this.currentPage} className={'mt-3'}/>
         </div>
 
-        <FeedbackPage />
+        <FeedbackPage page={this.currentPage} missionId={this.missionId}/>
       </IziviContent>
     );
   }

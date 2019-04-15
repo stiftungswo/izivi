@@ -11,7 +11,7 @@ class UserFeedbackQuestion extends Model
     protected $fillable = [
         'id',
         'question',
-        'new_page',
+        'page',
         'type',
         'required',
         'custom_info',
@@ -23,7 +23,6 @@ class UserFeedbackQuestion extends Model
     ];
 
     protected $casts = [
-        'new_page' => 'boolean',
         'required' => 'boolean',
     ];
 

@@ -43,7 +43,7 @@ class App extends React.Component {
           <Route component={PhoneListView} exact path={'/phones'} />
           <Route component={ProfileOverview} exact path={'/profile'} />
           <ProtectedRoute component={ChangePassword} exact path={'/changePassword'} />
-          <ProtectedRoute component={MissionFeedback} exact path={'/mission/:id/feedback'} />
+          <ProtectedRoute component={MissionFeedback} exact path={'/mission/:id/feedback/:page'} />
           <ProtectedRoute requiresAdmin component={PaymentOverview} exact path={'/payments'} />
           <ProtectedRoute requiresAdmin component={MissionOverview} exact path={'/missions'} />
           <ProtectedRoute requiresAdmin component={PaymentDetail} exact path={'/payments/:id'} />

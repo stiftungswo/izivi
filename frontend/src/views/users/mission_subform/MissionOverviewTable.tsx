@@ -49,7 +49,7 @@ function renderFeedbackButton(mission: Mission) {
   }
 
   return (
-    <Link to={`/mission/${mission.id}/feedback`}>
+    <Link to={`/mission/${mission.id}/feedback/1`}>
       <Button color={'info'} type={'button'} className="mr-1">
         <FontAwesomeIcon icon={MailSolidIcon} /> <span>Feedback senden</span>
       </Button>
