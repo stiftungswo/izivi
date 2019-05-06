@@ -12,13 +12,11 @@ export const MissionTable = ({
   calculateMissionEndDate,
   deleteMission,
   onChange,
-  onLocationChange,
   missions,
   saveMission,
   setReceivedDraft,
   specifications,
   userIdParam,
-  location,
 }) => (
   <div>
     <h3>Einsatzplanung</h3>
@@ -72,11 +70,9 @@ export const MissionTable = ({
           calculateMissionDays={calculateMissionDays}
           calculateMissionEndDate={calculateMissionEndDate}
           onChange={onChange}
-          onLocationChange={onLocationChange}
           saveMission={saveMission}
           setReceivedDraft={setReceivedDraft}
           specifications={specifications.filter(spec => spec.active)}
-          location={location}
         />
 
         <button className={'btn btn-success'} data-toggle="modal" data-target="#einsatzModal_new">
@@ -199,11 +195,9 @@ const MissionModal = ({
   calculateMissionEndDate,
   mission,
   onChange,
-  onLocationChange,
   saveMission,
   setReceivedDraft,
   specifications,
-  location,
 }) => {
   const howerText_Tage =
     'Zeigt dir die Anzahl Tage an, welche für den Einsatz voraussichtlich angerechnet werden. Falls während dem Einsatz Betriebsferien liegen, werden die entsprechenden Tage abgezogen, falls die Dauer zu kurz ist um diese mit Ferientagen kompensieren zu können. Feiertage innerhalb von Betriebsferien gelten auf alle Fälle als Dienstage.';
@@ -219,9 +213,6 @@ const MissionModal = ({
       </button>
     );
 
-  const deSpecIds = ['72466', '72467', '72468'];
-  const frSpecIds = ['82844'];
-
   return (
     <div id={'einsatzModal_' + (mission ? mission.id : '')} className={'modal fade'} role={'dialog'}>
       <div className={'modal-dialog'}>
@@ -234,434 +225,123 @@ const MissionModal = ({
           </div>
 
           <div className={'modal-body'}>
-            {mission.id !== 'new' ? (
-              <div>
-                <div className={'alert alert-info'}>
-                  <p style={{ textAlign: 'left' }}>
-                    <b>Hinweis: </b>
-                    {howerText_DayCalculation}
-                  </p>
-                </div>
+            <div className={'alert alert-info'}>
+              <p style={{ textAlign: 'left' }}>
+                <b>Hinweis: </b>
+                {howerText_DayCalculation}
+              </p>
+            </div>
 
-                <form
-                  className={'form-horizontal'}
-                  onSubmit={e => {
-                    saveMission(mission.id);
-                    e.preventDefault();
-                  }}
-                >
-                  <div className={'form-group'}>
-                    <label className={'control-label col-sm-3'} htmlFor={`specification_${mission.id}`}>
-                      Pflichtenheft
-                    </label>
+            <form
+              className={'form-horizontal'}
+              onSubmit={e => {
+                saveMission(mission.id);
+                e.preventDefault();
+              }}
+            >
+              <div className={'form-group'}>
+                <label className={'control-label col-sm-3'} htmlFor={`specification_${mission.id}`}>
+                  Pflichtenheft
+                </label>
 
-                    <div className={'col-sm-9'}>
-                      <select
-                        value={mission.specification}
-                        id={`specification_${mission.id}`}
-                        name={'specification'}
-                        className={'form-control'}
-                        onChange={e => onChange(e, mission.id)}
-                        required
-                      >
-                        {deSpecIds.includes(mission.specification)
-                          ? [
-                              <option key={'72466'} value={'72466'}>
-                                {'Feldarbeiten (ab 06.07.2016)'}
-                              </option>,
-                              <option key={'72467'} value={'72467'}>
-                                {'Admin (ab 06.07.2016)'}
-                              </option>,
-                              <option key={'72468'} value={'72468'}>
-                                {'Admin; Ressourcen-, Arten- und Naturschutz (ab 06.07.2016)'}
-                              </option>,
-                            ]
-                          : frSpecIds.includes(mission.specification)
-                            ? [
-                                <option key={'82844'} value={'82844'}>
-                                  {'VS Feldarbeiten'}
-                                </option>,
-                              ]
-                            : specifications.map(spec => (
-                                <option key={spec.id} value={spec.id}>
-                                  {spec.name}
-                                </option>
-                              ))}
-                        {/*<option value={"0"}/>*/}
-                        {/*{*/}
-                        {/*specifications.map(spec => (*/}
-                        {/*<option key={spec.id} value={spec.id}>*/}
-                        {/*{spec.name}*/}
-                        {/*</option>*/}
-                        {/*))*/}
-                        {/*}*/}
-                      </select>
-                    </div>
-                  </div>
-                  <div className={'form-group'}>
-                    <label className={'control-label col-sm-3'} htmlFor={`mission_type_${mission.id}`}>
-                      Einsatzart
-                    </label>
-
-                    <div className={'col-sm-9'}>
-                      <select
-                        value={mission.mission_type || '0'}
-                        id={`mission_type_${mission.id}`}
-                        name={'mission_type'}
-                        className={'form-control'}
-                        onChange={e => onChange(e, mission.id)}
-                      >
-                        <option value={'0'} />
-                        <option value={'1'}>Erster Einsatz</option>
-                        <option value={'2'}>Letzter Einsatz</option>
-                      </select>
-                    </div>
-                  </div>
-                  <DatePicker
-                    value={mission.start}
-                    id={`start_${mission.id}`}
-                    name={'start'}
-                    label={'Einsatzbeginn'}
+                <div className={'col-sm-9'}>
+                  <select
+                    value={mission.specification}
+                    id={`specification_${mission.id}`}
+                    name={'specification'}
+                    className={'form-control'}
                     onChange={e => onChange(e, mission.id)}
-                  />
-                  <DatePicker
-                    value={mission.end}
-                    id={`end_${mission.id}`}
-                    name={'end'}
-                    label={'Einsatzende'}
-                    onChange={async e => {
-                      await onChange(e, mission.id);
-                      calculateMissionDays(mission.id);
-                    }}
-                  />
-                  <InputFieldWithHelpText
-                    value={mission.calculated_mission_days}
-                    id={`calculated_mission_days_${mission.id}`}
-                    name={'calculated_mission_days'}
-                    label={'Einsatztage'}
-                    popoverText={howerText_Tage}
-                    onChange={async e => {
-                      await onChange(e, mission.id);
-                      calculateMissionEndDate(mission.id);
-                    }}
-                  />
-                  <InputCheckbox
-                    value={mission.first_time}
-                    id={`first_time_${mission.id}`}
-                    name={'first_time'}
-                    label={'Erster SWO Einsatz?'}
-                    onChange={e => onChange(e, mission.id)}
-                  />
-                  <InputCheckbox
-                    value={mission.long_mission}
-                    id={`long_mission_${mission.id}`}
-                    name={'long_mission'}
-                    label={'Langer Einsatz?'}
-                    onChange={e => onChange(e, mission.id)}
-                  />
-                  <InputCheckbox
-                    value={mission.probation_period}
-                    id={`probation_period_${mission.id}`}
-                    name={'probation_period'}
-                    label={'Probeeinsatz?'}
-                    onChange={e => onChange(e, mission.id)}
-                  />
-                  <hr />
-                  <h4>Status</h4>
-                  {!mission || !mission.draft ? 'Provisorisch' : 'Aufgeboten, Aufgebot erhalten am ' + mission.draft}
-                  <hr />
-                  {(!mission || !mission.draft || Auth.isAdmin()) && (
-                    <button className={'btn btn-primary'} type={'submit'}>
-                      Daten speichern
-                    </button>
-                  )}
-                  &nbsp;
-                  {aufgebotErhaltenButton}
-                </form>
-              </div>
-            ) : (
-              <div>
-                <form
-                  className={'form-horizontal'}
-                  onSubmit={e => {
-                    e.preventDefault();
-                  }}
-                >
-                  <div className={'form-group'} style={{ marginBottom: '10px' }}>
-                    <label className={'control-label col-sm-3'} htmlFor={`specification_${mission.id}`}>
-                      Standort
-                    </label>
-
-                    <div className={'col-sm-9'}>
-                      <select
-                        value={location ? location : '0'}
-                        id={`location`}
-                        name={'location'}
-                        className={'form-control'}
-                        onChange={e => onLocationChange(e)}
-                        required
-                      >
-                        <option value={'0'} />
-                        <option value={'de'}>Zürich</option>
-                        <option value={'fr'}>Valais</option>
-                      </select>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            )}
-            {location ? (
-              location === 'de' ? (
-                <div>
-                  <div className={'alert alert-info'}>
-                    <p style={{ textAlign: 'left' }}>
-                      <b>Hinweis: </b>
-                      {howerText_DayCalculation}
-                    </p>
-                  </div>
-
-                  <form
-                    className={'form-horizontal'}
-                    onSubmit={e => {
-                      saveMission(mission.id);
-                      e.preventDefault();
-                    }}
+                    required
                   >
-                    <div className={'form-group'}>
-                      <label className={'control-label col-sm-3'} htmlFor={`specification_${mission.id}`}>
-                        Pflichtenheft
-                      </label>
-
-                      <div className={'col-sm-9'}>
-                        <select
-                          value={mission.specification}
-                          id={`specification_${mission.id}`}
-                          name={'specification'}
-                          className={'form-control'}
-                          onChange={e => onChange(e, mission.id)}
-                          required
-                        >
-                          <option value={'0'} />
-                          <option value={'72466'}>{'Feldarbeiten (ab 06.07.2016)'}</option>
-                          <option value={'72467'}>{'Admin (ab 06.07.2016)'}</option>
-                          <option value={'72468'}>{'Admin; Ressourcen-, Arten- und Naturschutz (ab 06.07.2016)'}</option>
-                          {/*<option value=82844>*/}
-                          {/*{"VS Feldarbeiten"}*/}
-                          {/*</option>*/}
-                          {/*{specifications.map(spec => (*/}
-                          {/*<option key={spec.id} value={spec.id}>*/}
-                          {/*{spec.name}*/}
-                          {/*</option>*/}
-                          {/*))}*/}
-                        </select>
-                      </div>
-                    </div>
-                    <div className={'form-group'}>
-                      <label className={'control-label col-sm-3'} htmlFor={`mission_type_${mission.id}`}>
-                        Einsatzart
-                      </label>
-
-                      <div className={'col-sm-9'}>
-                        <select
-                          value={mission.mission_type || '0'}
-                          id={`mission_type_${mission.id}`}
-                          name={'mission_type'}
-                          className={'form-control'}
-                          onChange={e => onChange(e, mission.id)}
-                        >
-                          <option value={'0'} />
-                          <option value={'1'}>Erster Einsatz</option>
-                          <option value={'2'}>Letzter Einsatz</option>
-                        </select>
-                      </div>
-                    </div>
-                    <DatePicker
-                      value={mission.start}
-                      id={`start_${mission.id}`}
-                      name={'start'}
-                      label={'Einsatzbeginn'}
-                      onChange={e => onChange(e, mission.id)}
-                    />
-                    <DatePicker
-                      value={mission.end}
-                      id={`end_${mission.id}`}
-                      name={'end'}
-                      label={'Einsatzende'}
-                      onChange={async e => {
-                        await onChange(e, mission.id);
-                        calculateMissionDays(mission.id);
-                      }}
-                    />
-                    <InputFieldWithHelpText
-                      value={mission.calculated_mission_days}
-                      id={`calculated_mission_days_${mission.id}`}
-                      name={'calculated_mission_days'}
-                      label={'Einsatztage'}
-                      popoverText={howerText_Tage}
-                      onChange={async e => {
-                        await onChange(e, mission.id);
-                        calculateMissionEndDate(mission.id);
-                      }}
-                    />
-                    <InputCheckbox
-                      value={mission.first_time}
-                      id={`first_time_${mission.id}`}
-                      name={'first_time'}
-                      label={'Erster SWO Einsatz?'}
-                      onChange={e => onChange(e, mission.id)}
-                    />
-                    <InputCheckbox
-                      value={mission.long_mission}
-                      id={`long_mission_${mission.id}`}
-                      name={'long_mission'}
-                      label={'Langer Einsatz?'}
-                      onChange={e => onChange(e, mission.id)}
-                    />
-                    <InputCheckbox
-                      value={mission.probation_period}
-                      id={`probation_period_${mission.id}`}
-                      name={'probation_period'}
-                      label={'Probeeinsatz?'}
-                      onChange={e => onChange(e, mission.id)}
-                    />
-                    <hr />
-                    <h4>Status</h4>
-                    {!mission || !mission.draft ? 'Provisorisch' : 'Aufgeboten, Aufgebot erhalten am ' + mission.draft}
-                    <hr />
-                    {(!mission || !mission.draft || Auth.isAdmin()) && (
-                      <button className={'btn btn-primary'} type={'submit'}>
-                        Daten speichern
-                      </button>
-                    )}
-                    &nbsp;
-                    {aufgebotErhaltenButton}
-                  </form>
+                    <option value={'0'} />
+                    {specifications.map(spec => (
+                      <option key={spec.id} value={spec.id}>
+                        {spec.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-              ) : (
-                <div>
-                  <div className={'alert alert-info'}>
-                    <p style={{ textAlign: 'left' }}>
-                      <b>Hinweis: </b>
-                      {howerText_DayCalculation}
-                    </p>
-                  </div>
+              </div>
+              <div className={'form-group'}>
+                <label className={'control-label col-sm-3'} htmlFor={`mission_type_${mission.id}`}>
+                  Einsatzart
+                </label>
 
-                  <form
-                    className={'form-horizontal'}
-                    onSubmit={e => {
-                      saveMission(mission.id);
-                      e.preventDefault();
-                    }}
+                <div className={'col-sm-9'}>
+                  <select
+                    value={mission.mission_type || '0'}
+                    id={`mission_type_${mission.id}`}
+                    name={'mission_type'}
+                    className={'form-control'}
+                    onChange={e => onChange(e, mission.id)}
                   >
-                    <div className={'form-group'}>
-                      <label className={'control-label col-sm-3'} htmlFor={`specification_${mission.id}`}>
-                        Pflichtenheft
-                      </label>
-
-                      <div className={'col-sm-9'}>
-                        <select
-                          value={mission.specification}
-                          id={`specification_${mission.id}`}
-                          name={'specification'}
-                          className={'form-control'}
-                          onChange={e => onChange(e, mission.id)}
-                          required
-                        >
-                          <option value={'0'} />
-                          <option value={'82844'}>{'VS Feldarbeiten'}</option>
-                          {/*{specifications.map(spec => (*/}
-                          {/*<option key={spec.id} value={spec.id}>*/}
-                          {/*{spec.name}*/}
-                          {/*</option>*/}
-                          {/*))}*/}
-                        </select>
-                      </div>
-                    </div>
-                    <div className={'form-group'}>
-                      <label className={'control-label col-sm-3'} htmlFor={`mission_type_${mission.id}`}>
-                        Einsatzart
-                      </label>
-
-                      <div className={'col-sm-9'}>
-                        <select
-                          value={mission.mission_type || '0'}
-                          id={`mission_type_${mission.id}`}
-                          name={'mission_type'}
-                          className={'form-control'}
-                          onChange={e => onChange(e, mission.id)}
-                        >
-                          <option value={'0'} />
-                          <option value={'1'}>Erster Einsatz</option>
-                          <option value={'2'}>Letzter Einsatz</option>
-                        </select>
-                      </div>
-                    </div>
-                    <DatePicker
-                      value={mission.start}
-                      id={`start_${mission.id}`}
-                      name={'start'}
-                      label={'Einsatzbeginn'}
-                      onChange={e => onChange(e, mission.id)}
-                    />
-                    <DatePicker
-                      value={mission.end}
-                      id={`end_${mission.id}`}
-                      name={'end'}
-                      label={'Einsatzende'}
-                      onChange={async e => {
-                        await onChange(e, mission.id);
-                        calculateMissionDays(mission.id);
-                      }}
-                    />
-                    <InputFieldWithHelpText
-                      value={mission.calculated_mission_days}
-                      id={`calculated_mission_days_${mission.id}`}
-                      name={'calculated_mission_days'}
-                      label={'Einsatztage'}
-                      popoverText={howerText_Tage}
-                      onChange={async e => {
-                        await onChange(e, mission.id);
-                        calculateMissionEndDate(mission.id);
-                      }}
-                    />
-                    <InputCheckbox
-                      value={mission.first_time}
-                      id={`first_time_${mission.id}`}
-                      name={'first_time'}
-                      label={'Erster SWO Einsatz?'}
-                      onChange={e => onChange(e, mission.id)}
-                    />
-                    <InputCheckbox
-                      value={mission.long_mission}
-                      id={`long_mission_${mission.id}`}
-                      name={'long_mission'}
-                      label={'Langer Einsatz?'}
-                      onChange={e => onChange(e, mission.id)}
-                    />
-                    <InputCheckbox
-                      value={mission.probation_period}
-                      id={`probation_period_${mission.id}`}
-                      name={'probation_period'}
-                      label={'Probeeinsatz?'}
-                      onChange={e => onChange(e, mission.id)}
-                    />
-                    <hr />
-                    <h4>Status</h4>
-                    {!mission || !mission.draft ? 'Provisorisch' : 'Aufgeboten, Aufgebot erhalten am ' + mission.draft}
-                    <hr />
-                    {(!mission || !mission.draft || Auth.isAdmin()) && (
-                      <button className={'btn btn-primary'} type={'submit'}>
-                        Daten speichern
-                      </button>
-                    )}
-                    &nbsp;
-                    {aufgebotErhaltenButton}
-                  </form>
+                    <option value={'0'} />
+                    <option value={'1'}>Erster Einsatz</option>
+                    <option value={'2'}>Letzter Einsatz</option>
+                  </select>
                 </div>
-              )
-            ) : (
-              <div />
-            )}
+              </div>
+              <DatePicker
+                value={mission.start}
+                id={`start_${mission.id}`}
+                name={'start'}
+                label={'Einsatzbeginn'}
+                onChange={e => onChange(e, mission.id)}
+              />
+              <DatePicker
+                value={mission.end}
+                id={`end_${mission.id}`}
+                name={'end'}
+                label={'Einsatzende'}
+                onChange={async e => {
+                  await onChange(e, mission.id);
+                  calculateMissionDays(mission.id);
+                }}
+              />
+              <InputFieldWithHelpText
+                value={mission.calculated_mission_days}
+                id={`calculated_mission_days_${mission.id}`}
+                name={'calculated_mission_days'}
+                label={'Einsatztage'}
+                popoverText={howerText_Tage}
+                onChange={async e => {
+                  await onChange(e, mission.id);
+                  calculateMissionEndDate(mission.id);
+                }}
+              />
+              <InputCheckbox
+                value={mission.first_time}
+                id={`first_time_${mission.id}`}
+                name={'first_time'}
+                label={'Erster SWO Einsatz?'}
+                onChange={e => onChange(e, mission.id)}
+              />
+              <InputCheckbox
+                value={mission.long_mission}
+                id={`long_mission_${mission.id}`}
+                name={'long_mission'}
+                label={'Langer Einsatz?'}
+                onChange={e => onChange(e, mission.id)}
+              />
+              <InputCheckbox
+                value={mission.probation_period}
+                id={`probation_period_${mission.id}`}
+                name={'probation_period'}
+                label={'Probeeinsatz?'}
+                onChange={e => onChange(e, mission.id)}
+              />
+              <hr />
+              <h4>Status</h4>
+              {!mission || !mission.draft ? 'Provisorisch' : 'Aufgeboten, Aufgebot erhalten am ' + mission.draft}
+              <hr />
+              {(!mission || !mission.draft || Auth.isAdmin()) && (
+                <button className={'btn btn-primary'} type={'submit'}>
+                  Daten speichern
+                </button>
+              )}
+              &nbsp;
+              {aufgebotErhaltenButton}
+            </form>
           </div>
         </div>
       </div>

@@ -16,7 +16,6 @@ export default class Commitment extends Component {
       missions: [{ id: 'new', specification: '0' }],
       reportSheets: [],
       specifications: [],
-      location: null,
     };
 
     this.addReportSheet = this.addReportSheet.bind(this);
@@ -109,16 +108,6 @@ export default class Commitment extends Component {
       this.changeMissionResult(mission_id, e.target.name, DatePicker.dateFormat_CH2EN(e.target.value));
     } else {
       this.changeMissionResult(mission_id, e.target.name, e.target.value);
-    }
-  }
-
-  handleLocationChange(e) {
-    if (e.target.value === 'de') {
-      this.setState({ location: 'de' });
-    } else if (e.target.value === 'fr') {
-      this.setState({ location: 'fr' });
-    } else {
-      this.setState({ location: null });
     }
   }
 
@@ -284,7 +273,7 @@ export default class Commitment extends Component {
   }
 
   render() {
-    const { missions, reportSheets, specifications, location } = this.state;
+    const { missions, reportSheets, specifications } = this.state;
     const { userIdParam } = this.props;
 
     return (
@@ -296,12 +285,10 @@ export default class Commitment extends Component {
           deleteMission={this.deleteMission}
           missions={missions}
           onChange={this.handleMissionChange}
-          onLocationChange={e => this.handleLocationChange(e)}
           saveMission={this.saveMission}
           specifications={specifications}
           setReceivedDraft={this.setReceivedDraft}
           userIdParam={userIdParam}
-          location={location}
         />
         <ReportSheets reportSheets={reportSheets} />
       </div>
