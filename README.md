@@ -89,7 +89,7 @@ Installation gemäss der Installationsanleitung auf der [Website](https://docs.d
 5. Entwicklungsserver starten: ``yarn run start``
 
 ### Git
-1. Git Pre-Commit Hook ins .git-Verzeichnis kopieren, damit die Änderung auf allenfalls fehlerhafte Formatierung getestet werden: ``ln -s $(pwd)/hooks/pre-commit $(pwd)/.git/hooks``
+1. Git Pre-Commit Hook ins .git-Verzeichnis kopieren, damit die Änderung auf allenfalls fehlerhafte Formatierung getestet werden: ``cp hooks/pre-coomit .git/hooks``
 
 ## Entwicklung
 ### Code-Formatierung
