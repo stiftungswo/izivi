@@ -21,7 +21,7 @@ class CompanyInfo
     // PLZ und Ort des Einsatzbetriebs
     const COMPANY_CITY = '8603 Schwerzenbach ';
     // Adresse des Einsatzbetriebs
-    const COMPANY_ADDRESS_WORKPLACE = 'Bahnstrasse 9';
+    const COMPANY_ADDRESS_WORKPLACE = 'Bahnstrasse 18b';
     // PLZ und Ort des Einsatzbetriebs
     const COMPANY_CITY_WORKPLACE = '8603 Schwerzenbach';
     // Artikel des Einsatzbetriebnamens (der, die oder das)
